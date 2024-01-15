@@ -9,6 +9,7 @@ public class Repeatable : MonoBehaviour
     private Vector3 startPosition;
     private bool movingForward = true;
 
+    // Start is called before the first frame update
     private void Start()
     {
         // Get the start position
