@@ -11,13 +11,13 @@ public class ScaleRepeater : MonoBehaviour
     public float speed = 1f;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Determine the target scale based on the current scale state
         // https://discussions.unity.com/t/resizing-an-object/6145/3
