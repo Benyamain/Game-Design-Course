@@ -1,2 +1,0 @@
-# Assignment 🥇
-"This assignment is designed to introduce you to the Unity editor. Upon completion, you will be familiar with the interfaces and windows in the Unity editor, including being able to navigate the scene view, hierarchy, and inspectors. You will take your first dive into scripting with C# to create behaviors in Unity which will establish a foundation understanding for you to create unique gameplay features in the future."
