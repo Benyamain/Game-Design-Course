@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("Coin rotation speed")]
-    private float _speed = 60f;
     private int _coinCount;
     private int _maxCoins = 5;
     [SerializeField]
@@ -22,13 +19,13 @@ public class Coin : MonoBehaviour
     // Called once every frame
     private void Update()
     {
+        // As the number of coins increases and eventually meets the limit, we update GM and reset the count to exit the condition
         if (_coinCount == _maxCoins) {
-            ResetCoinCount();
+            GameManager.MaxCoins = _maxCoins;
+            Debug.Log(" GameManager.MaxCoins: " +  GameManager.MaxCoins);
+            _coinCount = 0;
+            Debug.Log("RESET _coinCount: " + _coinCount);
         }
-        
-        // Rotate on the y-axis but do it with respect to time
-        // https://docs.unity3d.com/ScriptReference/Transform.Rotate.html
-        transform.Rotate(0f, _speed * Time.deltaTime, 0f);
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -37,15 +34,14 @@ public class Coin : MonoBehaviour
             // Hear coin pickup
             if (!_coinSFX.isPlaying) {
                 _coinSFX.Play();
-                Debug.Log("Playing coin sound");
+                Debug.Log("Playing coin audio");
             }
             Destroy(this.gameObject);
             // Display this on the UI thread
             ++_coinCount;
+            Debug.Log("_coinCount: " + _coinCount);
+            GameManager.CoinCount = _coinCount;
+            Debug.Log("GameManager.CoinCount: " + GameManager.CoinCount);
         }
-    }
-
-    private void ResetCoinCount() {
-        _coinCount = 0;
     }
 }

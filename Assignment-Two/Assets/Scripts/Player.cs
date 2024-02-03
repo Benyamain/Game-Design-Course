@@ -62,12 +62,12 @@ public class Player : MonoBehaviour
 
         float speed = _movementSpeed * Time.deltaTime;
 
-        // Before moving every frame, reset animator states
+        // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
 
         // Animations based on direction
         if (_move.y > 0f) {
-            _isRunning = true;
+            _isRunning = true;  
         }
         else if (_move.y < 0f) {
             _isRunningBackwards = true;
@@ -78,8 +78,12 @@ public class Player : MonoBehaviour
         else if (_move.x < 0f) {
             _isLeftStrafing = true;
         }
-        else if (false) {
-            // Replace this when condition of reaching end zone and player wins, start dancing
+
+        // Change this later to (GameManager.CoinCount == GameManager.MaxCoins) && Input.GetKey(KeyCode.F)
+        // Ultimately, this will check if we have collected all the coins so you earned this dance move!
+        // Add GUI element to hint for the keypress
+        if (GameManager.CoinCount == 1 && Input.GetKey(KeyCode.F)) {
+            // Reached endzone, start dancing!
             _isDancing = true;
         }
 

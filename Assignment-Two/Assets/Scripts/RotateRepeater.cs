@@ -5,7 +5,7 @@ using UnityEngine;
 public class RotateRepeater : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("Obstacle rotation speed")]
+    [Tooltip("Object rotation speed")]
     private float _speed = 100f;
     
     // Start is called before the first frame update
