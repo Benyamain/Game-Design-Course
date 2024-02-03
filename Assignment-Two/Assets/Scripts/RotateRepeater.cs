@@ -1,0 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RotateRepeater : MonoBehaviour
+{
+    [SerializeField]
+    [Tooltip("Obstacle rotation speed")]
+    private float _speed = 100f;
+    
+    // Start is called before the first frame update
+    private void Start()
+    {
+        
+    }
+
+    // Called once every frame
+    private void Update()
+    {
+        // Rotate on the y-axis but do it with respect to time
+        // https://docs.unity3d.com/ScriptReference/Transform.Rotate.html
+        transform.Rotate(0f, _speed * Time.deltaTime, 0f);
+    }
+}

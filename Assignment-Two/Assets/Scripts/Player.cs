@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMover : MonoBehaviour
+public class Player : MonoBehaviour
 {
     // Animation documentation: https://docs.unity3d.com/Manual/class-AnimatorController.html
     // Animations with input system: https://discussions.unity.com/t/how-to-set-animators-controller-in-script/63474/3
@@ -17,9 +17,14 @@ public class PlayerMover : MonoBehaviour
     private Animator _animator;
     [SerializeField]
     [Tooltip("Movement speed relative to delta time")]
-    [Range(1f, 10f)]
+    [Range(0f, 10f)]
     private float _movementSpeed = 1f;
+    [SerializeField]
+    [Tooltip("Look speed relative to delta time")]
+    [Range(0f, 10f)]
+    private float _lookSpeed = 1f;
     private  Vector2 _move;
+    private  float _look;
     [SerializeField]
     private Transform _playerTransform;
     private bool _isRunning;
@@ -41,11 +46,19 @@ public class PlayerMover : MonoBehaviour
         _move = value.Get<Vector2>();
     }
 
+    private void OnLook(InputValue value)
+    {
+        _look = value.Get<float>();
+    }
+
     // Update is called upon a fixed time
     private void Update()
     {
         // Prevent caching
         Transform t = transform;
+
+        // Rotation on y-axis
+        t.eulerAngles = new(0f, t.eulerAngles.y + _look * _lookSpeed, 0f);
 
         float speed = _movementSpeed * Time.deltaTime;
 
