@@ -4775,8 +4775,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 939839506}
-  _force: 5
   _animator: {fileID: 939839509}
+  _movementSpeed: 5
   _playerTransform: {fileID: 939839505}
 --- !u!136 &939839508
 CapsuleCollider:
