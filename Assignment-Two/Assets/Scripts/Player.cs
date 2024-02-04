@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     private bool _isDancing;
     private bool _isLeftStrafing;
     private bool _isRightStrafing;
+    private float _stopwatch;
     
     // Start is called before the first frame update
     private void Start()
@@ -54,6 +55,11 @@ public class Player : MonoBehaviour
     // Update is called upon a fixed time
     private void Update()
     {
+        // https://forum.unity.com/threads/trying-to-make-a-stopwatch-with-time-deltatime.1223490/
+        _stopwatch += Time.deltaTime;
+        // Display to UI
+        GameManager.CurrentTime = _stopwatch;
+
         // Prevent caching
         Transform t = transform;
 

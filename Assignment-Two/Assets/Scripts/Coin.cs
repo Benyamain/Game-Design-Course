@@ -21,7 +21,7 @@ public class Coin : MonoBehaviour
     {
         // As the number of coins increases and eventually meets the limit, we update GM and reset the count to exit the condition
         if (_coinCount == _maxCoins) {
-            GameManager.MaxCoins = _maxCoins;
+            //GameManager.MaxCoins = _maxCoins;
             Debug.Log(" GameManager.MaxCoins: " +  GameManager.MaxCoins);
             _coinCount = 0;
             Debug.Log("RESET _coinCount: " + _coinCount);

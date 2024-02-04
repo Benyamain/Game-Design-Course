@@ -37,7 +37,7 @@ public class RestartLevel : MonoBehaviour
         if (other.tag == "Player" && GameManager.CoinCount == GameManager.MaxCoins) {
             // Add GUI element to hint for the keypress
             // https://forum.unity.com/threads/restart-scene-key.812355/
-            if (Input.GetKey(KeyCode.Space)) {
+            if (Input.GetKey(KeyCode.R)) {
                 ResetGameManagerCoins();
                 // Load the scene again
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
