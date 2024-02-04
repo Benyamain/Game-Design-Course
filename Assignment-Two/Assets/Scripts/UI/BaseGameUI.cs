@@ -7,10 +7,6 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(UIDocument))]
 public abstract class BaseGameUI : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("The scene number to load when the button is clicked.")]
-    private int _load;
-    
     /// <summary>
     /// The label to display the score in the game and the high score in the menu.
     /// </summary>
@@ -29,7 +25,7 @@ public abstract class BaseGameUI : MonoBehaviour
     /// <summary>
     /// The button to switch between the game and menu.
     /// </summary>
-    protected Button LevelButton;
+    protected Button GameLevelButton;
     
     // Start is called before the first frame update
     protected virtual void Start()
@@ -50,28 +46,19 @@ public abstract class BaseGameUI : MonoBehaviour
         BestTimeLabel = root.Q<Label>("BestTimeLabel");
         
         // Get the button for switching levels.
-        LevelButton = root.Q<Button>("LevelButton");
+        GameLevelButton = root.Q<Button>("GameLevelButton");
 
-        LevelButton.clicked += LoadLevel;
+        GameLevelButton.clicked += LoadLevel;
     }
 
     private void LoadLevel()
     {
         // Load the level based on the index set in the inspector.
-        SceneManager.LoadScene(_load);
-    }
-
-    private void Update()
-    {
-        // Switch levels
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            LoadLevel();
-        }
+        SceneManager.LoadScene(GameManager.LoadMenu);
     }
 
     private void OnDestroy()
     {
-        LevelButton.clicked -= LoadLevel;
+        GameLevelButton.clicked -= LoadLevel;
     }
 }

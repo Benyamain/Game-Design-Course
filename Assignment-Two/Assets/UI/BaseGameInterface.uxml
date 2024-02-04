@@ -4,7 +4,7 @@
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ScoreLabel" style="-unity-text-align: upper-center; text-overflow: clip; -unity-font-style: normal;" />
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TimeLabel" style="-unity-text-align: upper-center; text-overflow: clip; -unity-font-style: normal;" />
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BestTimeLabel" style="-unity-text-align: upper-center; text-overflow: clip; -unity-font-style: normal;" />
-            <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LevelButton" style="-unity-font-style: bold; background-color: rgb(188, 188, 188); -unity-text-align: middle-center; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;" />
+            <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameLevelButton" style="-unity-font-style: bold; background-color: rgb(188, 188, 188); -unity-text-align: middle-center; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

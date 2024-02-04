@@ -15,33 +15,23 @@ public class RestartLevel : MonoBehaviour
         _endzoneSFX = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
-        // As long as enters, the music will keep playing until it reaches the end of its length
-        if (other.tag == "Player") {
-            // Hear endzone audio
-            if (!_endzoneSFX.isPlaying) {
-                _endzoneSFX.Play();
-            }
-        }
-    }
-
     private void OnTriggerStay(Collider other) {
         // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
         if (other.tag == "Player" && GameManager.CoinCount == GameManager.MaxCoins) {
-            // Add GUI element to hint for the keypress
+            // Hear endzone audio once you start dancing
+            if (!_endzoneSFX.isPlaying && GameManager.CanDance) {
+                _endzoneSFX.Play();
+            }
+
             // https://forum.unity.com/threads/restart-scene-key.812355/
             if (Input.GetKey(KeyCode.R)) {
-                ResetGameManagerCoins();
                 // Load the scene again
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                GameManager.ResetInstances();
             }
+
+            // Can dance now
+            GameManager.ReachedEndzone = true;
         }
     }
 
@@ -50,11 +40,8 @@ public class RestartLevel : MonoBehaviour
         if (_endzoneSFX.isPlaying) {
             _endzoneSFX.Stop();
         }
-    }
 
-    // Reset values
-    private void ResetGameManagerCoins() {
-        GameManager.CoinCount = 0;
-        GameManager.MaxCoins = 0;
+        GameManager.ReachedEndzone = false;
+        GameManager.CanDance = false;
     }
 }

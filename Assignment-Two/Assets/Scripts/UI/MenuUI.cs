@@ -8,6 +8,9 @@ public class MenuUI : BaseMenuUI
     protected override void Start()
     {
         base.Start();
-        LevelButton.text = "'Space' to Play";
+        MenuLevelButton.text = "Play";
+
+        // Accounting for potential errors
+        GameManager.ResetInstances();
     }
 }

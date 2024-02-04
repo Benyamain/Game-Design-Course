@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class GameUI : BaseGameUI
 {    
+    private float _currentTime;
+    private float _bestTime;
+    
     // https://forum.unity.com/threads/how-do-i-make-my-code-only-display-1-or-2-numbers-after-the-decimal.370059/
     
     // Start is called before the first frame update
     protected override void Start()
-    {
+    {   
         // Call the base start method so the label and button are set up first.
         base.Start();
 
@@ -30,7 +33,7 @@ public class GameUI : BaseGameUI
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString() + " s";
         
         // This button is for taking us to the menu so make it say so.
-        LevelButton.text = "Menu";
+        GameLevelButton.text = "Menu";
     }
 
     // Update is called once per frame
@@ -40,10 +43,12 @@ public class GameUI : BaseGameUI
         ScoreLabel.text = "Coins: " + GameManager.CoinCount.ToString() + " of " + GameManager.MaxCoins.ToString();
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
-        // Check if the current time is greater than the existing best time.
-        if (GameManager.CurrentTime > PlayerPrefs.GetFloat("BEST TIME"))
+        // Check if the current time is less than the existing best time once player is in endzone and has all coins.
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("BEST TIME")) && GameManager.ReachedEndzone)
         {
             GameManager.BestTime = GameManager.CurrentTime;
+            // Store in temporary as there is bug fix that resets and does not show the best time
+            _bestTime = GameManager.BestTime;
 
             // Set new best time
             PlayerPrefs.SetFloat("BEST TIME", GameManager.BestTime);

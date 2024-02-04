@@ -7,14 +7,10 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(UIDocument))]
 public abstract class BaseMenuUI : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("The scene number to load when the button is clicked.")]
-    private int _load;
-
     /// <summary>
     /// The button to switch between the game and menu.
     /// </summary>
-    protected Button LevelButton;
+    protected Button MenuLevelButton;
     
     // Start is called before the first frame update
     protected virtual void Start()
@@ -26,28 +22,19 @@ public abstract class BaseMenuUI : MonoBehaviour
         VisualElement root = document.rootVisualElement;
         
         // Get the button for switching levels.
-        LevelButton = root.Q<Button>("LevelButton");
+        MenuLevelButton = root.Q<Button>("MenuLevelButton");
 
-        LevelButton.clicked += LoadLevel;
+        MenuLevelButton.clicked += LoadLevel;
     }
 
     private void LoadLevel()
     {
         // Load the level based on the index set in the inspector.
-        SceneManager.LoadScene(_load);
-    }
-
-    private void Update()
-    {
-        // Switch levels
-        if (Input.GetKey(KeyCode.Space))
-        {
-            LoadLevel();
-        }
+        SceneManager.LoadScene(GameManager.LoadGame);
     }
 
     private void OnDestroy()
     {
-        LevelButton.clicked -= LoadLevel;
+        MenuLevelButton.clicked -= LoadLevel;
     }
 }
