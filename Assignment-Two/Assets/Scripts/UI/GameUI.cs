@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameUI : BaseGameUI
 {    
-    private float _currentTime;
     private float _bestTime;
     
     // https://forum.unity.com/threads/how-do-i-make-my-code-only-display-1-or-2-numbers-after-the-decimal.370059/
@@ -16,14 +15,14 @@ public class GameUI : BaseGameUI
         base.Start();
 
         // Check if the current time is greater than the existing best time.
-        if (PlayerPrefs.GetFloat("BEST TIME") == 0f)
+        if (PlayerPrefs.GetFloat("TIME PR") == 0f)
         {
             // First time playing the game
             BestTimeLabel.text = $"Best: None";
         }
         else {
             // Get new best time
-            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("BEST TIME").ToString("F2") + " s";
+            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("TIME PR").ToString("F2") + " s";
         }
 
         // Display no score at the start of the game.
@@ -44,14 +43,14 @@ public class GameUI : BaseGameUI
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
         // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("BEST TIME")) && GameManager.ReachedEndzone)
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME PR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R))
         {
             GameManager.BestTime = GameManager.CurrentTime;
             // Store in temporary as there is bug fix that resets and does not show the best time
             _bestTime = GameManager.BestTime;
 
             // Set new best time
-            PlayerPrefs.SetFloat("BEST TIME", GameManager.BestTime);
+            PlayerPrefs.SetFloat("TIME PR", _bestTime);
         }
     }
 }

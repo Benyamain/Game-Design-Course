@@ -87,10 +87,9 @@ public class Player : MonoBehaviour
 
         // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
         // Add GUI element to hint for the keypress
-        if ((GameManager.CoinCount == GameManager.MaxCoins) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.F)) {
+        if ((GameManager.CoinCount == GameManager.MaxCoins) && GameManager.ReachedEndzone && GameManager.CanDance && Input.GetKey(KeyCode.F)) {
             // Start dancing!
             _isDancing = true;
-            GameManager.CanDance = _isDancing;
         }
 
         // Update animator based on movement states
