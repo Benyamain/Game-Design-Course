@@ -15,14 +15,14 @@ public class GameUI : BaseGameUI
         base.Start();
 
         // Check if the current time is greater than the existing best time.
-        if (PlayerPrefs.GetFloat("TIME PR") == 0f)
+        if (PlayerPrefs.GetFloat("TIME BEST WR") == 0f)
         {
             // First time playing the game
             BestTimeLabel.text = $"Best: None";
         }
         else {
             // Get new best time
-            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("TIME PR").ToString("F2") + " s";
+            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("TIME BEST WR").ToString("F2") + " s";
         }
 
         // Display no score at the start of the game.
@@ -43,14 +43,14 @@ public class GameUI : BaseGameUI
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
         // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME PR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R))
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME BEST WR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R) && (GameManager.CoinCount == GameManager.MaxCoins))
         {
             GameManager.BestTime = GameManager.CurrentTime;
             // Store in temporary as there is bug fix that resets and does not show the best time
             _bestTime = GameManager.BestTime;
 
             // Set new best time
-            PlayerPrefs.SetFloat("TIME PR", _bestTime);
+            PlayerPrefs.SetFloat("TIME BEST WR", _bestTime);
         }
     }
 }

@@ -16,14 +16,14 @@ public class RestartLevel : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other) {
-        // Can dance now
-        GameManager.ReachedEndzone = true;
-        GameManager.CanDance = true;
-
         // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
         if (other.tag == "Player" && GameManager.CoinCount == GameManager.MaxCoins) {
+            // Can dance now
+            GameManager.ReachedEndzone = true;
+            GameManager.CanDance = true;
+
             // Hear endzone audio once you start dancing
-            if (!_endzoneSFX.isPlaying && GameManager.CanDance) {
+            if (!_endzoneSFX.isPlaying) {
                 _endzoneSFX.Play();
             }
 
@@ -32,9 +32,7 @@ public class RestartLevel : MonoBehaviour
                 // Load the scene again
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 GameManager.ResetInstances();
-            }
-
-            
+            } 
         }
     }
 
