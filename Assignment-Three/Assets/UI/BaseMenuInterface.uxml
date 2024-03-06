@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Outer" style="flex-grow: 1; align-items: center; justify-content: center; align-self: center;">
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MenuLevelButton" style="-unity-font-style: bold; background-color: rgb(188, 188, 188); -unity-text-align: middle-center; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; align-self: auto; align-items: stretch; width: 300px; height: 100px; font-size: 28px;" />
+    </ui:VisualElement>
+</ui:UXML>
