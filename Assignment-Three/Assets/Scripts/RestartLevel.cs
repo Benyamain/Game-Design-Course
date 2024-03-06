@@ -17,7 +17,7 @@ public class RestartLevel : MonoBehaviour
 
     private void OnTriggerStay(Collider other) {
         // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
-        if (other.tag == "Player" && GameManager.CoinCount == GameManager.MaxCoins) {
+        if (other.tag == "Player" && GameManager.SkullCount == GameManager.MaxSkulls) {
             // Can dance now
             GameManager.ReachedEndzone = true;
             GameManager.CanDance = true;

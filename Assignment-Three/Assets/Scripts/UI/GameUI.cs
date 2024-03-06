@@ -26,7 +26,7 @@ public class GameUI : BaseGameUI
         }
 
         // Display no score at the start of the game.
-        ScoreLabel.text = "Coins: " + GameManager.CoinCount.ToString() + " of " + GameManager.MaxCoins.ToString();
+        ScoreLabel.text = "Skulls: " + GameManager.SkullCount.ToString() + " of " + GameManager.MaxSkulls.ToString();
 
         // Display no time at the start of the game.
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString() + " s";
@@ -39,11 +39,11 @@ public class GameUI : BaseGameUI
     private void Update()
     {
         // Update the label to show the most up to date score
-        ScoreLabel.text = "Coins: " + GameManager.CoinCount.ToString() + " of " + GameManager.MaxCoins.ToString();
+        ScoreLabel.text = "Skulls: " + GameManager.SkullCount.ToString() + " of " + GameManager.MaxSkulls.ToString();
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
         // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME BEST WR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R) && (GameManager.CoinCount == GameManager.MaxCoins))
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME BEST WR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R) && (GameManager.SkullCount == GameManager.MaxSkulls))
         {
             GameManager.BestTime = GameManager.CurrentTime;
             // Store in temporary as there is bug fix that resets and does not show the best time

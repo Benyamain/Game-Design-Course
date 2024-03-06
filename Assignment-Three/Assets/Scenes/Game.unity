@@ -881,10 +881,9 @@ GameObject:
   - component: {fileID: 163354238}
   - component: {fileID: 163354237}
   - component: {fileID: 163354239}
-  - component: {fileID: 163354241}
   - component: {fileID: 163354240}
   m_Layer: 0
-  m_Name: Coin
+  m_Name: Skull
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -941,7 +940,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4aef3c1eff7e5489e5701138e46a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinSFX: {fileID: 163354240}
 --- !u!82 &163354240
 AudioSource:
   m_ObjectHideFlags: 0
@@ -952,7 +950,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03ef56262d8c94b40bf0995098bfcb6f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 659dc1ac8bace98489ec6d492dbc18da, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -1038,19 +1036,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &163354241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 163354236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce7f033fa956d046b893684c5e2c180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 60
 --- !u!4 &192814015 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1749950437431784017, guid: a5eb9200176bece4791f121120fced60, type: 3}
@@ -1231,10 +1216,9 @@ GameObject:
   - component: {fileID: 287840720}
   - component: {fileID: 287840719}
   - component: {fileID: 287840718}
-  - component: {fileID: 287840721}
   - component: {fileID: 287840717}
   m_Layer: 0
-  m_Name: Coin (2)
+  m_Name: Skull (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1250,7 +1234,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03ef56262d8c94b40bf0995098bfcb6f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 659dc1ac8bace98489ec6d492dbc18da, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -1348,7 +1332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4aef3c1eff7e5489e5701138e46a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinSFX: {fileID: 287840717}
 --- !u!136 &287840719
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1388,19 +1371,6 @@ Transform:
   - {fileID: 2046980815}
   m_Father: {fileID: 2029254432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &287840721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 287840716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce7f033fa956d046b893684c5e2c180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 60
 --- !u!1001 &305595206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4022,10 +3992,9 @@ GameObject:
   - component: {fileID: 789639468}
   - component: {fileID: 789639467}
   - component: {fileID: 789639466}
-  - component: {fileID: 789639469}
   - component: {fileID: 789639465}
   m_Layer: 0
-  m_Name: Coin (4)
+  m_Name: Skull (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4041,7 +4010,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03ef56262d8c94b40bf0995098bfcb6f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 659dc1ac8bace98489ec6d492dbc18da, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -4139,7 +4108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4aef3c1eff7e5489e5701138e46a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinSFX: {fileID: 789639465}
 --- !u!136 &789639467
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4179,19 +4147,6 @@ Transform:
   - {fileID: 634076443}
   m_Father: {fileID: 2029254432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &789639469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789639464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce7f033fa956d046b893684c5e2c180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 60
 --- !u!1 &790454086
 GameObject:
   m_ObjectHideFlags: 0
@@ -5553,10 +5508,9 @@ GameObject:
   - component: {fileID: 1004563678}
   - component: {fileID: 1004563677}
   - component: {fileID: 1004563676}
-  - component: {fileID: 1004563679}
   - component: {fileID: 1004563675}
   m_Layer: 0
-  m_Name: Coin (1)
+  m_Name: Skull (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5572,7 +5526,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03ef56262d8c94b40bf0995098bfcb6f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 659dc1ac8bace98489ec6d492dbc18da, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -5670,7 +5624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4aef3c1eff7e5489e5701138e46a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinSFX: {fileID: 1004563675}
 --- !u!136 &1004563677
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5710,19 +5663,6 @@ Transform:
   - {fileID: 1397700023}
   m_Father: {fileID: 2029254432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1004563679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004563674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce7f033fa956d046b893684c5e2c180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 60
 --- !u!4 &1008386738 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4887460767432162760, guid: 30c819560420f824da028f3502f83728, type: 3}
@@ -10412,10 +10352,9 @@ GameObject:
   - component: {fileID: 2018869262}
   - component: {fileID: 2018869261}
   - component: {fileID: 2018869260}
-  - component: {fileID: 2018869263}
   - component: {fileID: 2018869259}
   m_Layer: 0
-  m_Name: Coin (3)
+  m_Name: Skull (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10431,7 +10370,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 03ef56262d8c94b40bf0995098bfcb6f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 659dc1ac8bace98489ec6d492dbc18da, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -10529,7 +10468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4aef3c1eff7e5489e5701138e46a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinSFX: {fileID: 2018869259}
 --- !u!136 &2018869261
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10569,19 +10507,6 @@ Transform:
   - {fileID: 1839683239}
   m_Father: {fileID: 2029254432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2018869263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2018869258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce7f033fa956d046b893684c5e2c180, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 60
 --- !u!1001 &2023504962
 PrefabInstance:
   m_ObjectHideFlags: 0
