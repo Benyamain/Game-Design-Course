@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class RestartLevel : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class RestartLevel : MonoBehaviour
             GameManager.CanDance = true;
 
             // https://forum.unity.com/threads/restart-scene-key.812355/
-            if (Input.GetKey(KeyCode.R)) {
+            if (Keyboard.current.rKey.wasPressedThisFrame) {
                 // Load the scene again
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 GameManager.ResetInstances();

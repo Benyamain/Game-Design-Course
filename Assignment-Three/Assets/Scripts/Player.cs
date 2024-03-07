@@ -32,7 +32,10 @@ public class Player : MonoBehaviour
     private bool _isDancing;
     private bool _isLeftStrafing;
     private bool _isRightStrafing;
+    private bool _isShooting;
+    private bool _isJumping;
     private float _stopwatch;
+    private AudioSource _weaponSFX;
     
     // Start is called before the first frame update
     private void Start()
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         // Get animator attached on the player
         _animator = _playerTransform.gameObject.GetComponent<Animator>();
+        _weaponSFX = GetComponent<AudioSource>();
     }
 
     private void OnMove(InputValue value) {
@@ -84,10 +88,29 @@ public class Player : MonoBehaviour
         else if (_move.x < 0f) {
             _isLeftStrafing = true;
         }
+        else if (Mouse.current.leftButton.isPressed) {
+            _isShooting = true;
+
+            // Shoot sound
+            if (!_weaponSFX.isPlaying) {
+                _weaponSFX.Play();
+            }
+        }
+        else if (Mouse.current.leftButton.wasReleasedThisFrame) {
+            _isShooting = false;
+
+            if (_weaponSFX.isPlaying)
+            {
+                _weaponSFX.Stop();
+            }
+        }
+        else if (Keyboard.current.spaceKey.isPressed) {
+            _isJumping = true;
+        }
 
         // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
         // Add GUI element to hint for the keypress
-        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone && GameManager.CanDance && Input.GetKey(KeyCode.F)) {
+        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone && GameManager.CanDance && Keyboard.current.fKey.wasPressedThisFrame) {
             // Start dancing!
             _isDancing = true;
         }
@@ -98,6 +121,8 @@ public class Player : MonoBehaviour
         _animator.SetBool("_isDancing", _isDancing);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
+        _animator.SetBool("_isShooting", _isShooting);
+        _animator.SetBool("_isJumping", _isJumping);
 
         // Move player forward, backwards, right, left
         t.position += t.forward * (_move.y * speed) + t.right * (_move.x * speed);
@@ -109,5 +134,7 @@ public class Player : MonoBehaviour
         _isDancing = false;
         _isLeftStrafing = false;
         _isRightStrafing = false;
+        _isShooting = false;
+        _isJumping = false;
     }
 }
