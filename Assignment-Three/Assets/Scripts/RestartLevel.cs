@@ -5,14 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class RestartLevel : MonoBehaviour
 {
-    [SerializeField]
-    [Tooltip("Audio file for the endzone")]
-    private AudioSource _endzoneSFX;
     
     // Start is called before the first frame update
     private void Start()
     {
-        _endzoneSFX = GetComponent<AudioSource>();
+        // TODO
     }
 
     private void OnTriggerStay(Collider other) {
@@ -21,11 +18,6 @@ public class RestartLevel : MonoBehaviour
             // Can dance now
             GameManager.ReachedEndzone = true;
             GameManager.CanDance = true;
-
-            // Hear endzone audio once you start dancing
-            if (!_endzoneSFX.isPlaying) {
-                _endzoneSFX.Play();
-            }
 
             // https://forum.unity.com/threads/restart-scene-key.812355/
             if (Input.GetKey(KeyCode.R)) {
@@ -37,11 +29,6 @@ public class RestartLevel : MonoBehaviour
     }
 
     private void OnTriggerExit(Collider other) {
-        // Irrelevant of the collider, just stop the music once called
-        if (_endzoneSFX.isPlaying) {
-            _endzoneSFX.Stop();
-        }
-
         GameManager.ReachedEndzone = false;
         GameManager.CanDance = false;
     }
