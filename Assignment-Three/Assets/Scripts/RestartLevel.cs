@@ -21,7 +21,7 @@ public class RestartLevel : MonoBehaviour
             GameManager.CanDance = true;
 
             // https://forum.unity.com/threads/restart-scene-key.812355/
-            if (Keyboard.current.rKey.wasPressedThisFrame) {
+            if (Keyboard.current.rKey.isPressed) {
                 // Load the scene again
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 GameManager.ResetInstances();

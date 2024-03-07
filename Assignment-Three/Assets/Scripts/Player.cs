@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
 
         // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
         // Add GUI element to hint for the keypress
-        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone && GameManager.CanDance && Keyboard.current.fKey.wasPressedThisFrame) {
+        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone && GameManager.CanDance && Keyboard.current.fKey.isPressed) {
             // Start dancing!
             _isDancing = true;
         }
