@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -56,6 +57,7 @@ public class CharacterMover : MonoBehaviour
     private bool _isJumping;
     private float _stopwatch;
     private AudioSource _weaponSFX;
+    private bool _canJump = true;
 
     /// <summary>
     /// The vertical velocity to handle jumping and falling.
@@ -152,16 +154,8 @@ public class CharacterMover : MonoBehaviour
         // Calculate the forwards and backwards movement relative to the direction the character is facing.
         Vector3 movement = t.forward * (moveSpeed * move * Time.deltaTime);
 
-        if (_controller.isGrounded)
-        {
-            if (Keyboard.current.spaceKey.isPressed) {
-                _velocity = jumpForce;
-                _isJumping = true;
-            }
-            else {
-                _velocity = 0;
-                _isJumping = false;
-            }
+        if (_canJump && Keyboard.current.spaceKey.wasPressedThisFrame) {
+            StartCoroutine(JumpWithDelay());
         }
         
         // Every frame apply gravity
@@ -200,5 +194,20 @@ public class CharacterMover : MonoBehaviour
         _isRightStrafing = false;
         _isShooting = false;
         _isJumping = false;
+    }
+
+    private IEnumerator JumpWithDelay() {
+        _canJump = false;
+        _isJumping = false;
+
+        if (_controller.isGrounded)
+        {
+            _velocity = jumpForce;
+            _isJumping = true;
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        _canJump = true;
     }
 }
