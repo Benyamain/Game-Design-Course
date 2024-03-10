@@ -23,6 +23,16 @@ public abstract class BaseGameUI : MonoBehaviour
     protected Label BestTimeLabel;
 
     /// <summary>
+    /// The label to display how to switch FOV.
+    /// </summary>
+    protected Label FOVLabel;
+
+    /// <summary>
+    /// The label to display how to restart.
+    /// </summary>
+    protected Label RestartLabel;
+
+    /// <summary>
     /// The button to switch between the game and menu.
     /// </summary>
     protected Button GameLevelButton;
@@ -44,6 +54,10 @@ public abstract class BaseGameUI : MonoBehaviour
 
         // Get the label for the best time.
         BestTimeLabel = root.Q<Label>("BestTimeLabel");
+
+        FOVLabel = root.Q<Label>("FOVLabel");
+
+        RestartLabel = root.Q<Label>("RestartLabel");
         
         // Get the button for switching levels.
         GameLevelButton = root.Q<Button>("GameLevelButton");

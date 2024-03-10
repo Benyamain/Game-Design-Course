@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class CharacterMover : MonoBehaviour
@@ -50,7 +51,6 @@ public class CharacterMover : MonoBehaviour
     private Transform _playerTransform;
     private bool _isRunning;
     private bool _isRunningBackwards;
-    private bool _isDancing;
     private bool _isLeftStrafing;
     private bool _isRightStrafing;
     private bool _isShooting;
@@ -147,6 +147,11 @@ public class CharacterMover : MonoBehaviour
             // Enable the character controller so it can move again
             _controller.enabled = true;
         }
+
+        if (Keyboard.current.fKey.wasPressedThisFrame) {
+            GameManager.IsLocalLayer = !GameManager.IsLocalLayer;
+            GameManager.ChangeLayer(GameManager.IsLocalLayer);
+        }
         
         // Rotate on the y (green) axis for turning.
         t.Rotate(0, look * lookSpeed * Time.deltaTime, 0);
@@ -157,6 +162,13 @@ public class CharacterMover : MonoBehaviour
         if (_canJump && Keyboard.current.spaceKey.wasPressedThisFrame) {
             StartCoroutine(JumpWithDelay());
         }
+
+        // https://forum.unity.com/threads/restart-scene-key.812355/
+        if (Keyboard.current.rKey.wasPressedThisFrame) {
+            // Load the scene again
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.ResetInstances();
+        } 
         
         // Every frame apply gravity
         _velocity += gravity * Time.deltaTime;
@@ -171,15 +183,13 @@ public class CharacterMover : MonoBehaviour
 
         // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
         // Add GUI element to hint for the keypress
-        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone && GameManager.CanDance && Keyboard.current.fKey.isPressed) {
-            // Start dancing!
-            _isDancing = true;
+        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone) {
+            // TODO
         }
 
         // Update animator based on movement states
         _animator.SetBool("_isRunning", _isRunning);
         _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
-        _animator.SetBool("_isDancing", _isDancing);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
         _animator.SetBool("_isShooting", _isShooting);
@@ -189,7 +199,6 @@ public class CharacterMover : MonoBehaviour
     private void ResetMovementState() {
         _isRunning = false;
         _isRunningBackwards = false;
-        _isDancing = false;
         _isLeftStrafing = false;
         _isRightStrafing = false;
         _isShooting = false;

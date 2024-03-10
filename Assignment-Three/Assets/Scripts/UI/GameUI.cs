@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameUI : BaseGameUI
 {    
@@ -15,14 +16,14 @@ public class GameUI : BaseGameUI
         base.Start();
 
         // Check if the current time is greater than the existing best time.
-        if (PlayerPrefs.GetFloat("TIME BEST WR") == 0f)
+        if (PlayerPrefs.GetFloat("NEW KEY") == 0f)
         {
             // First time playing the game
             BestTimeLabel.text = $"Best: None";
         }
         else {
             // Get new best time
-            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("TIME BEST WR").ToString("F2") + " s";
+            BestTimeLabel.text = "Best: " + PlayerPrefs.GetFloat("NEW KEY").ToString("F2") + " s";
         }
 
         // Display no score at the start of the game.
@@ -30,6 +31,10 @@ public class GameUI : BaseGameUI
 
         // Display no time at the start of the game.
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString() + " s";
+
+        FOVLabel.text = "FOV (F)";
+
+        RestartLabel.text = "Restart (R)";
         
         // This button is for taking us to the menu so make it say so.
         GameLevelButton.text = "Menu";
@@ -43,14 +48,18 @@ public class GameUI : BaseGameUI
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
         // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("TIME BEST WR", float.MaxValue)) && GameManager.ReachedEndzone && Input.GetKey(KeyCode.R) && (GameManager.SkullCount == GameManager.MaxSkulls))
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("NEW KEY", float.MaxValue)) && GameManager.ReachedEndzone)
         {
             GameManager.BestTime = GameManager.CurrentTime;
             // Store in temporary as there is bug fix that resets and does not show the best time
             _bestTime = GameManager.BestTime;
 
             // Set new best time
-            PlayerPrefs.SetFloat("TIME BEST WR", _bestTime);
+            PlayerPrefs.SetFloat("NEW KEY", _bestTime);
+
+            // Load the scene again
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.ResetInstances();
         }
     }
 }
