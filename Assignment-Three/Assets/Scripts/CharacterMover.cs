@@ -9,6 +9,7 @@ public class CharacterMover : MonoBehaviour
     // Animation documentation: https://docs.unity3d.com/Manual/class-AnimatorController.html
     // Animations with input system: https://discussions.unity.com/t/how-to-set-animators-controller-in-script/63474/3
     // Animations: https://youtu.be/C2jrQ8VWvUs?si=R_tDfmc8dvKqQKuJ
+    // Movement: https://youtu.be/_QajrabyTJc?si=5i___U6P-PwVYXvG
 
     [Tooltip("How fast to move.")]
     [Min(float.Epsilon)]
@@ -55,6 +56,7 @@ public class CharacterMover : MonoBehaviour
     private bool _isRightStrafing;
     private bool _isShooting;
     private bool _isJumping;
+    private bool _isSprinting;
     private float _stopwatch;
     private AudioSource _weaponSFX;
     private bool _canJump = true;
@@ -70,6 +72,9 @@ public class CharacterMover : MonoBehaviour
         // Get animator attached on the player
         _animator = _playerTransform.gameObject.GetComponent<Animator>();
         _weaponSFX = GetComponent<AudioSource>();
+
+        Cursor.lockState  = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -127,6 +132,11 @@ public class CharacterMover : MonoBehaviour
             {
                 _weaponSFX.Stop();
             }
+        }
+
+        if (!_isRunning && !_isShooting && Keyboard.current.leftShiftKey.isPressed) {
+            move += 1.25f;
+            _isSprinting = true;
         }
 
         // Cache the transform for performance
@@ -194,6 +204,7 @@ public class CharacterMover : MonoBehaviour
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
         _animator.SetBool("_isShooting", _isShooting);
         _animator.SetBool("_isJumping", _isJumping);
+        _animator.SetBool("_isSprinting", _isSprinting);
     }
 
     private void ResetMovementState() {
@@ -203,6 +214,7 @@ public class CharacterMover : MonoBehaviour
         _isRightStrafing = false;
         _isShooting = false;
         _isJumping = false;
+        _isSprinting = false;
     }
 
     private IEnumerator JumpWithDelay() {

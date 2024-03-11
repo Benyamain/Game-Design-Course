@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
         WeaponCameraCrosshair = GameObject.FindGameObjectWithTag("WeaponCameraCrosshair");
 
         SetLayerRecursively(Player.transform, IsLocalLayer ? 6 : 0);
+        PlayerCameraCrosshair.SetActive(true);
+        WeaponCameraCrosshair.SetActive(false);
     }
     
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b

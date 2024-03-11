@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
 public class HitScan : MonoBehaviour
@@ -38,6 +39,11 @@ public class HitScan : MonoBehaviour
         if (Physics.Raycast(p, rayStart.TransformDirection(Vector3.forward), out RaycastHit hit))
         {
             SetLineRendererPositions(p, hit.point);
+
+            // Check if object hit has a collider
+            if (hit.collider != null && hit.collider.CompareTag("Destroyable")) {
+                Destroy(hit.collider.gameObject);
+            }
         }
         else
         {
@@ -51,7 +57,8 @@ public class HitScan : MonoBehaviour
     private void ClearLineRenderer()
     {
         _lr.positionCount = 0;
-        _alpha = 1f; // Reset when not drawing
+        // Reset when not drawing
+        _alpha = 1f;
     }
 
     private void SetLineRendererPositions(Vector3 start, Vector3 end)
@@ -75,10 +82,7 @@ public class HitScan : MonoBehaviour
             lineColor.a = _alpha;
             _lr.startColor = lineColor;
             _lr.endColor = lineColor;
-        }
-        else
-        {
-            // Reset line renderer when fully faded
+        } else {
             ClearLineRenderer();
         }
     }

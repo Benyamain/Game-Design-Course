@@ -32,6 +32,10 @@ public class GameUI : BaseGameUI
         // Display no time at the start of the game.
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString() + " s";
 
+        JumpLabel.text = "Jump (Spacebar)";
+
+        SprintLabel.text = "Sprint (LShift)";
+
         FOVLabel.text = "FOV (F)";
 
         RestartLabel.text = "Restart (R)";

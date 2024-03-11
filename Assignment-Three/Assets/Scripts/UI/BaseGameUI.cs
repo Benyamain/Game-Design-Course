@@ -23,6 +23,16 @@ public abstract class BaseGameUI : MonoBehaviour
     protected Label BestTimeLabel;
 
     /// <summary>
+    /// The label to display how to jump.
+    /// </summary>
+    protected Label JumpLabel;
+    
+    /// <summary>
+    /// The label to display how to sprint.
+    /// </summary>
+    protected Label SprintLabel;
+
+    /// <summary>
     /// The label to display how to switch FOV.
     /// </summary>
     protected Label FOVLabel;
@@ -54,6 +64,10 @@ public abstract class BaseGameUI : MonoBehaviour
 
         // Get the label for the best time.
         BestTimeLabel = root.Q<Label>("BestTimeLabel");
+
+        JumpLabel = root.Q<Label>("JumpLabel");
+
+        SprintLabel = root.Q<Label>("SprintLabel");
 
         FOVLabel = root.Q<Label>("FOVLabel");
 
