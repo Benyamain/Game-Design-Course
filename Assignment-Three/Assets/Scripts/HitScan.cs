@@ -16,7 +16,7 @@ public class HitScan : MonoBehaviour
     private float fadeOutSpeed = 10000f;
 
     [SerializeField]
-    private float lineWidth = 0.015f;
+    private float lineWidth = 0.045f;
 
     private LineRenderer _lr;
     private float _alpha = 1f;

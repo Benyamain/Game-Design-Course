@@ -41,7 +41,7 @@ public class GameUI : BaseGameUI
         RestartLabel.text = "Restart (R)";
         
         // This button is for taking us to the menu so make it say so.
-        GameLevelButton.text = "Menu";
+        GameLevelButton.text = "Menu (M)";
     }
 
     // Update is called once per frame

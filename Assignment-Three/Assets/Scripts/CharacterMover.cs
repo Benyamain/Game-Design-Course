@@ -19,7 +19,7 @@ public class CharacterMover : MonoBehaviour
     [Tooltip("How fast to turn in degrees.")]
     [Min(float.Epsilon)]
     [SerializeField]
-    private float lookSpeed = 180f;
+    private float lookSpeed = 2f;
 
     [Tooltip("How much velocity to add for jumping.")]
     [Min(float.Epsilon)]
@@ -66,6 +66,9 @@ public class CharacterMover : MonoBehaviour
     /// </summary>
     private float _velocity;
 
+    private  Vector2 _move;
+    private  float _look;
+
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -75,6 +78,15 @@ public class CharacterMover : MonoBehaviour
 
         Cursor.lockState  = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void OnMove(InputValue value) {
+        _move = value.Get<Vector2>();
+    }
+
+    private void OnLook(InputValue value)
+    {
+        _look = value.Get<float>();
     }
 
     private void Update()
@@ -87,31 +99,23 @@ public class CharacterMover : MonoBehaviour
         // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
         
-        // Variables to hold our movement (forwards and back) and looking (right and left) data.
-        float move = 0f;
-        float look = 0f;
-        
-        if (Keyboard.current.wKey.isPressed)
+        if (_move.y > 0f)
         {
-            move += 1f;
             _isRunning = true;
         }
-
-        if (Keyboard.current.sKey.isPressed)
+        
+        if (_move.y < 0f)
         {
-            move -= 1f;
             _isRunningBackwards = true;
         }
         
-        if (Keyboard.current.dKey.isPressed)
+        if (_move.x > 0f)
         {
-            look += 1f;
             _isRightStrafing = true;
         }
 
-        if (Keyboard.current.aKey.isPressed)
+        if (_move.x < 0f)
         {
-            look -= 1f;
             _isLeftStrafing = true;
         }
 
@@ -135,12 +139,14 @@ public class CharacterMover : MonoBehaviour
         }
 
         if (!_isRunning && !_isShooting && Keyboard.current.leftShiftKey.isPressed) {
-            move += 1.25f;
             _isSprinting = true;
         }
 
         // Cache the transform for performance
         Transform t = transform;
+
+        // Rotation on y-axis
+        t.eulerAngles = new(0f, t.eulerAngles.y + _look * lookSpeed, 0f);
         
         // Teleport the player when T is pressed.
         if (Keyboard.current.tKey.wasPressedThisFrame)
@@ -164,10 +170,10 @@ public class CharacterMover : MonoBehaviour
         }
         
         // Rotate on the y (green) axis for turning.
-        t.Rotate(0, look * lookSpeed * Time.deltaTime, 0);
+        t.Rotate(0f, _look * lookSpeed * Time.deltaTime, 0f);
 
         // Calculate the forwards and backwards movement relative to the direction the character is facing.
-        Vector3 movement = t.forward * (moveSpeed * move * Time.deltaTime);
+        Vector3 movement = t.forward * (moveSpeed * _move * Time.deltaTime);
 
         if (_canJump && Keyboard.current.spaceKey.wasPressedThisFrame) {
             StartCoroutine(JumpWithDelay());
@@ -195,6 +201,14 @@ public class CharacterMover : MonoBehaviour
         // Add GUI element to hint for the keypress
         if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone) {
             // TODO
+        }
+
+        if (Keyboard.current.mKey.wasPressedThisFrame) {
+            Cursor.lockState  = CursorLockMode.None;
+            Cursor.visible = true;
+
+            // Load the level based on the index set in the inspector.
+            SceneManager.LoadScene(GameManager.LoadMenu);
         }
 
         // Update animator based on movement states
