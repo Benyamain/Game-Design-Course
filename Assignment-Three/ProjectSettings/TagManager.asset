@@ -9,6 +9,7 @@ TagManager:
   - PlayerCameraCrosshair
   - WeaponCameraCrosshair
   - Destroyable
+  - Enemy
   layers:
   - Default
   - TransparentFX
