@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,22 +18,67 @@ public class GameManager : MonoBehaviour
     public static Camera GunCamera;
     public static Camera MainCamera;
     public static GameObject Player;
+    public static GameObject Enemy;
     public static GameObject PlayerShadows;
     public static GameObject PlayerCameraCrosshair;
     public static GameObject WeaponCameraCrosshair;
+    public static CharacterController PlayerCharacterController;
+    public static Vector3 CheckpointPosition = new(-35.96f, 44.36f, -63.42f);
+    public static Vector3 CheckpointRotation = new(0f, 110.43f, 0f);
+    public static Vector3 CheckpointScale = new(2f, 2f, 2f);
+    public static bool IsPlayerDead;
+    public static bool IsEnemyDead;
 
     private void Start()
     {
         GunCamera = GameObject.FindGameObjectWithTag("GunCamera").GetComponent<Camera>();
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         Player = GameObject.FindGameObjectWithTag("Player");
+        Enemy = GameObject.FindGameObjectWithTag("Enemy");
         PlayerShadows = GameObject.FindGameObjectWithTag("PlayerShadows");
         PlayerCameraCrosshair = GameObject.FindGameObjectWithTag("PlayerCameraCrosshair");
         WeaponCameraCrosshair = GameObject.FindGameObjectWithTag("WeaponCameraCrosshair");
+        PlayerCharacterController = Player.GetComponent<CharacterController>();
 
         SetLayerRecursively(Player.transform, IsLocalLayer ? 6 : 0);
         PlayerCameraCrosshair.SetActive(true);
         WeaponCameraCrosshair.SetActive(false);
+
+        Cursor.lockState  = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public static void PlayerDied() {
+        IsPlayerDead = true;
+        Destroy(Player);
+    }
+
+    public static void EnemyDied() {
+        IsEnemyDead = true;
+        Destroy(Enemy);
+    }
+
+    public static void RestartGame() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public static void DisablePlayerCharacterController() {
+        if (PlayerCharacterController != null)
+        {
+            PlayerCharacterController.enabled = false;
+
+            Cursor.lockState  = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
+    public static void EnablePlayerCharacterController() {
+        if (PlayerCharacterController != null)
+        {
+            PlayerCharacterController.enabled = true;
+            Cursor.lockState  = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b

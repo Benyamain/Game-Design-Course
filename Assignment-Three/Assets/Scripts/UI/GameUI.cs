@@ -35,6 +35,8 @@ public class GameUI : BaseGameUI
         JumpLabel.text = "Jump (Spacebar)";
 
         SprintLabel.text = "Sprint (LShift)";
+        
+        CrouchLabel.text = "Crouch (C)";
 
         FOVLabel.text = "FOV (F)";
 

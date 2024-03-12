@@ -20,13 +20,12 @@ public class Coin : MonoBehaviour
         // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
         if (other.tag == "Player") {
             // Hear coin pickup
-            if (!_skullSFX.isPlaying) {
-                _skullSFX.Play();
+            if (_skullSFX.isPlaying) {
+                _skullSFX.Stop();
             }
 
             // Destroy the game object after the audio clip is doing playing, so we can hear its beauty
-            Destroy(_skullMeshRenderer);
-            Destroy(_skullCapsuleCollider);
+            Destroy(gameObject);
             // Display this on the UI thread
             GameManager.AddSkull();
         }

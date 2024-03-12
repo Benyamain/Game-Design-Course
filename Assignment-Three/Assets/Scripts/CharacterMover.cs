@@ -19,7 +19,7 @@ public class CharacterMover : MonoBehaviour
     [Tooltip("How fast to turn in degrees.")]
     [Min(float.Epsilon)]
     [SerializeField]
-    private float lookSpeed = 2f;
+    private float lookSpeed = 180f;
 
     [Tooltip("How much velocity to add for jumping.")]
     [Min(float.Epsilon)]
@@ -34,16 +34,6 @@ public class CharacterMover : MonoBehaviour
     [SerializeField]
     private float terminalVelocity = -1f;
 
-    [Tooltip("The position to teleport the player to.")]
-    [SerializeField]
-    private Vector3 teleportPosition = new(0, 0.5f, 0);
-    
-    [Tooltip("The rotation to teleport the player to.")]
-    [SerializeField]
-    private Vector3 teleportRotation = Vector3.zero;
-
-    private CharacterController _controller;
-
     [SerializeField]
     [Tooltip("What ties in the animation to the player")]
     private Animator _animator;
@@ -57,36 +47,23 @@ public class CharacterMover : MonoBehaviour
     private bool _isShooting;
     private bool _isJumping;
     private bool _isSprinting;
+    private bool _isCrouching;
     private float _stopwatch;
     private AudioSource _weaponSFX;
     private bool _canJump = true;
+
+    private bool _playerDied;
 
     /// <summary>
     /// The vertical velocity to handle jumping and falling.
     /// </summary>
     private float _velocity;
 
-    private  Vector2 _move;
-    private  float _look;
-
     private void Start()
     {
-        _controller = GetComponent<CharacterController>();
         // Get animator attached on the player
         _animator = _playerTransform.gameObject.GetComponent<Animator>();
         _weaponSFX = GetComponent<AudioSource>();
-
-        Cursor.lockState  = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    private void OnMove(InputValue value) {
-        _move = value.Get<Vector2>();
-    }
-
-    private void OnLook(InputValue value)
-    {
-        _look = value.Get<float>();
     }
 
     private void Update()
@@ -99,23 +76,31 @@ public class CharacterMover : MonoBehaviour
         // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
         
-        if (_move.y > 0f)
+        // Variables to hold our movement (forwards and back) and looking (right and left) data.
+        float move = 0f;
+        float look = 0f;
+        
+        if (Keyboard.current.wKey.isPressed)
         {
+            move += 1f;
             _isRunning = true;
         }
-        
-        if (_move.y < 0f)
+
+        if (Keyboard.current.sKey.isPressed)
         {
+            move -= 1f;
             _isRunningBackwards = true;
         }
         
-        if (_move.x > 0f)
+        if (Keyboard.current.dKey.isPressed)
         {
+            look += 1f;
             _isRightStrafing = true;
         }
 
-        if (_move.x < 0f)
+        if (Keyboard.current.aKey.isPressed)
         {
+            look -= 1f;
             _isLeftStrafing = true;
         }
 
@@ -138,31 +123,18 @@ public class CharacterMover : MonoBehaviour
             }
         }
 
+        if (Keyboard.current.cKey.isPressed)
+        {
+            _isCrouching = true;
+        }
+
         if (!_isRunning && !_isShooting && Keyboard.current.leftShiftKey.isPressed) {
+            move += 1.25f;
             _isSprinting = true;
         }
 
         // Cache the transform for performance
         Transform t = transform;
-
-        // Rotation on y-axis
-        t.eulerAngles = new(0f, t.eulerAngles.y + _look * lookSpeed, 0f);
-        
-        // Teleport the player when T is pressed.
-        if (Keyboard.current.tKey.wasPressedThisFrame)
-        {
-            // Disable to character controller so we can move the player via the transform.
-            _controller.enabled = false;
-            
-            // Set the position
-            t.position = teleportPosition;
-            
-            // Set the rotation
-            t.eulerAngles = teleportRotation;
-            
-            // Enable the character controller so it can move again
-            _controller.enabled = true;
-        }
 
         if (Keyboard.current.fKey.wasPressedThisFrame) {
             GameManager.IsLocalLayer = !GameManager.IsLocalLayer;
@@ -170,10 +142,10 @@ public class CharacterMover : MonoBehaviour
         }
         
         // Rotate on the y (green) axis for turning.
-        t.Rotate(0f, _look * lookSpeed * Time.deltaTime, 0f);
+        t.Rotate(0, look * lookSpeed * Time.deltaTime, 0);
 
         // Calculate the forwards and backwards movement relative to the direction the character is facing.
-        Vector3 movement = t.forward * (moveSpeed * _move * Time.deltaTime);
+        Vector3 movement = t.forward * (moveSpeed * move * Time.deltaTime);
 
         if (_canJump && Keyboard.current.spaceKey.wasPressedThisFrame) {
             StartCoroutine(JumpWithDelay());
@@ -182,7 +154,7 @@ public class CharacterMover : MonoBehaviour
         // https://forum.unity.com/threads/restart-scene-key.812355/
         if (Keyboard.current.rKey.wasPressedThisFrame) {
             // Load the scene again
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.RestartGame();
             GameManager.ResetInstances();
         } 
         
@@ -195,20 +167,12 @@ public class CharacterMover : MonoBehaviour
         }
 
         // Apply the walking movement and the vertical velocity to the character.
-        _controller.Move(new(movement.x, _velocity, movement.z));
+        GameManager.PlayerCharacterController.Move(new(movement.x, _velocity, movement.z));
 
         // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
         // Add GUI element to hint for the keypress
         if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone) {
             // TODO
-        }
-
-        if (Keyboard.current.mKey.wasPressedThisFrame) {
-            Cursor.lockState  = CursorLockMode.None;
-            Cursor.visible = true;
-
-            // Load the level based on the index set in the inspector.
-            SceneManager.LoadScene(GameManager.LoadMenu);
         }
 
         // Update animator based on movement states
@@ -219,6 +183,7 @@ public class CharacterMover : MonoBehaviour
         _animator.SetBool("_isShooting", _isShooting);
         _animator.SetBool("_isJumping", _isJumping);
         _animator.SetBool("_isSprinting", _isSprinting);
+        _animator.SetBool("_isCrouching", _isCrouching);
     }
 
     private void ResetMovementState() {
@@ -229,13 +194,14 @@ public class CharacterMover : MonoBehaviour
         _isShooting = false;
         _isJumping = false;
         _isSprinting = false;
+        _isCrouching = false;
     }
 
     private IEnumerator JumpWithDelay() {
         _canJump = false;
         _isJumping = false;
 
-        if (_controller.isGrounded)
+        if (GameManager.PlayerCharacterController.isGrounded)
         {
             _velocity = jumpForce;
             _isJumping = true;

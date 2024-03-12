@@ -35,10 +35,10 @@ public class FirstPersonController : MonoBehaviour
     private float lookSpeedY = 2f;
 
     [SerializeField, Range(1, 180)]
-    private float upperLookLimit = 90f;
+    private float upperLookLimit = 60f;
 
     [SerializeField, Range(1, 180)]
-    private float lowerLookLimit = 90f;
+    private float lowerLookLimit = 60f;
 
     private Camera _playerCamera;
     private CharacterController _characterController;
@@ -54,8 +54,8 @@ public class FirstPersonController : MonoBehaviour
         _playerCamera = GetComponentInChildren<Camera>();
         _characterController = GetComponent<CharacterController>();
 
-        // Cursor.lockState  = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        Cursor.lockState  = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame

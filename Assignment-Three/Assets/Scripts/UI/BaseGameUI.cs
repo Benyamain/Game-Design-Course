@@ -33,6 +33,11 @@ public abstract class BaseGameUI : MonoBehaviour
     protected Label SprintLabel;
 
     /// <summary>
+    /// The label to display how to crouch.
+    /// </summary>
+    protected Label CrouchLabel;
+
+    /// <summary>
     /// The label to display how to switch FOV.
     /// </summary>
     protected Label FOVLabel;
@@ -68,6 +73,8 @@ public abstract class BaseGameUI : MonoBehaviour
         JumpLabel = root.Q<Label>("JumpLabel");
 
         SprintLabel = root.Q<Label>("SprintLabel");
+
+        CrouchLabel = root.Q<Label>("CrouchLabel");
 
         FOVLabel = root.Q<Label>("FOVLabel");
 

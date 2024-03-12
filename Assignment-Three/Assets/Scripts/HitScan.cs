@@ -20,6 +20,7 @@ public class HitScan : MonoBehaviour
 
     private LineRenderer _lr;
     private float _alpha = 1f;
+    
 
     private void Start()
     {
