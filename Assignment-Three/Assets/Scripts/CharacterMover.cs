@@ -87,7 +87,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.wKey.isPressed)
         {
             if (_canSprint) {
-                _canJump = _canCrouch = canShoot = false;
+                _canCrouch = canShoot = false;
                 move += 1.25f;
                 _isSprinting = true;
             }
@@ -117,26 +117,26 @@ public class CharacterMover : MonoBehaviour
         
         if (Keyboard.current.dKey.isPressed)
         {
-            DisableExtraMovements();
+            _canJump = _canCrouch = _canSprint = false;
             look += 1f;
             _isRightStrafing = true;
         }
 
         if (Keyboard.current.dKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            _canJump = _canCrouch = _canSprint = true;
         }
 
         if (Keyboard.current.aKey.isPressed)
         {
-            DisableExtraMovements();
+            _canJump = _canCrouch = _canSprint = false;
             look -= 1f;
             _isLeftStrafing = true;
         }
 
         if (Keyboard.current.aKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            _canJump = _canCrouch = _canSprint = true;
         }
 
         if (canShoot && Mouse.current.leftButton.isPressed) {
@@ -235,6 +235,10 @@ public class CharacterMover : MonoBehaviour
         }
 
         // Update animator based on movement states
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator() {
         _animator.SetBool("_isRunning", _isRunning);
         _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);

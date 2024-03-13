@@ -15,7 +15,11 @@ public class Enemy : MonoBehaviour
     private float rotationSpeed = 2f;
 
     [SerializeField]
-    private float meleeRange = 2f;
+    private float chaseRange = 25f;
+
+    // Maybe change this when they collide with each other?
+    [SerializeField]
+    private float meleeRange = 3f;
 
     private Vector3 _moveDirection;
     private bool _isRunning;
@@ -23,7 +27,15 @@ public class Enemy : MonoBehaviour
     private bool _isLeftStrafing;
     private bool _isRightStrafing;
     private bool _isMelee;
+    private bool _canMelee = true;
     // private bool _isKicking;
+
+    [SerializeField]
+    private float gravity = -2f;
+
+    [SerializeField]
+    private float terminalVelocity = -1f;
+    private float _velocity;
 
     private Vector2 _move;
     private float _look;
@@ -73,30 +85,54 @@ public class Enemy : MonoBehaviour
             _isLeftStrafing = true;
         }
 
-        CalculateMovement();
+        // Every frame apply gravity
+        _velocity += gravity * Time.deltaTime;
 
-        // Calculate the rotation to look at the player
-        Quaternion targetRotation = Quaternion.LookRotation(_moveDirection);
-
-        // Smoothly rotate towards the target rotation
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-
-        // Move towards the player
-        _controller.Move(_moveDirection * speed * Time.deltaTime);
+        if (_velocity < terminalVelocity)
+        {
+            _velocity = terminalVelocity;
+        }
 
         // Check if the player is within arms reach for melee
         float distanceToPlayer = Vector3.Distance(transform.position, GameManager.Player.transform.position);
-        if (distanceToPlayer <= meleeRange)
-        {
-            // Player is within arms reach, trigger the melee animation
-            _isMelee = true;
-        }
 
-        // Update animator based on movement and attack states
-        UpdateAnimator();
+        if (distanceToPlayer <= chaseRange)
+        {
+        
+            OrientateToPlayer();
+
+            // Calculate the rotation to look at the player
+            Quaternion targetRotation = Quaternion.LookRotation(_moveDirection);
+
+            // Smoothly rotate towards the target rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+            // Move towards the player
+            _controller.Move(_moveDirection * speed * Time.deltaTime);
+            
+            // Player is within arms reach, trigger the melee animation
+            if (distanceToPlayer <= meleeRange) {
+                _canMelee = true;
+                _isMelee = true;
+            }
+
+            // Update animator based on movement and attack states
+            UpdateAnimator();
+
+            // TODO: Fix issue of the melee animation not looping while being close to player
+            // TODO: Ground the enemy (freezing the y axis so maybe that is why)
+            // TODO: Fix sprint issue with player randomly activating when not pressing on left shift
+            // TODO: Fix forward animation of enemy not working properly
+
+            // if (_controller.isGrounded)
+            // {
+            //     // Jump when the space key is pressed and otherwise set the velocity to 0.
+            //     _velocity = Keyboard.current.spaceKey.wasPressedThisFrame ? jumpForce : 0;
+            // }
+        }
     }
 
-    private void CalculateMovement()
+    private void OrientateToPlayer()
     {
         // Calculate the direction to the player
         Vector3 directionToPlayer = GameManager.Player.transform.position - transform.position;
@@ -112,7 +148,7 @@ public class Enemy : MonoBehaviour
         _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
-        _animator.SetBool("_isMelee", _isMelee);
+        _animator.SetBool("_isMelee", _canMelee ? _isMelee : false);
         // _animator.SetBool("_isKicking", _isKicking);
     }
 
