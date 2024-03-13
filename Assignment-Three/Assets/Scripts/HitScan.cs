@@ -17,6 +17,7 @@ public class HitScan : MonoBehaviour
 
     [SerializeField]
     private float lineWidth = 0.045f;
+    private CharacterMover characterMover;
 
     private LineRenderer _lr;
     private float _alpha = 1f;
@@ -25,6 +26,7 @@ public class HitScan : MonoBehaviour
     private void Start()
     {
         _lr = GetComponent<LineRenderer>();
+        characterMover = GetComponent<CharacterMover>();
     }
 
     private void Update()
@@ -37,22 +39,24 @@ public class HitScan : MonoBehaviour
 
         Vector3 p = rayStart.position;
 
-        if (Physics.Raycast(p, rayStart.TransformDirection(Vector3.forward), out RaycastHit hit))
-        {
-            SetLineRendererPositions(p, hit.point);
+        if (characterMover.canShoot) {
+            if (Physics.Raycast(p, rayStart.TransformDirection(Vector3.forward), out RaycastHit hit))
+            {
+                SetLineRendererPositions(p, hit.point);
 
-            // Check if object hit has a collider
-            if (hit.collider != null && hit.collider.CompareTag("Destroyable")) {
-                Destroy(hit.collider.gameObject);
+                // Check if object hit has a collider
+                if (hit.collider != null && hit.collider.CompareTag("Destroyable")) {
+                    Destroy(hit.collider.gameObject);
+                }
             }
-        }
-        else
-        {
-            SetLineRendererPositions(p, p + rayStart.TransformDirection(Vector3.forward) * 1000);
-        }
+            else
+            {
+                SetLineRendererPositions(p, p + rayStart.TransformDirection(Vector3.forward) * 1000);
+            }
 
-        SetLineRendererWidth();
-        FadeOutLineRenderer();
+            SetLineRendererWidth();
+            FadeOutLineRenderer();
+        }
     }
 
     private void ClearLineRenderer()

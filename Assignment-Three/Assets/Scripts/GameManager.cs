@@ -66,9 +66,7 @@ public class GameManager : MonoBehaviour
         if (PlayerCharacterController != null)
         {
             PlayerCharacterController.enabled = false;
-
-            Cursor.lockState  = CursorLockMode.None;
-            Cursor.visible = true;
+            EnableCursorMode();
         }
     }
 
@@ -76,9 +74,18 @@ public class GameManager : MonoBehaviour
         if (PlayerCharacterController != null)
         {
             PlayerCharacterController.enabled = true;
+            DisableCursorMode();
+        }
+    }
+
+    public static void EnableCursorMode() {
+            Cursor.lockState  = CursorLockMode.None;
+            Cursor.visible = true;
+    }
+
+    public static void DisableCursorMode() {
             Cursor.lockState  = CursorLockMode.Locked;
             Cursor.visible = false;
-        }
     }
     
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b

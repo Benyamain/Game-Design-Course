@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Windows.Markup;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -50,9 +51,12 @@ public class CharacterMover : MonoBehaviour
     private bool _isCrouching;
     private float _stopwatch;
     private AudioSource _weaponSFX;
+    public bool canShoot = true;
     private bool _canJump = true;
+    private bool _canSprint = false;
+    private bool _canCrouch = true;
 
-    private bool _playerDied;
+    // private bool _playerDied;
 
     /// <summary>
     /// The vertical velocity to handle jumping and falling.
@@ -75,36 +79,68 @@ public class CharacterMover : MonoBehaviour
 
         // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
-        
+
         // Variables to hold our movement (forwards and back) and looking (right and left) data.
         float move = 0f;
         float look = 0f;
         
         if (Keyboard.current.wKey.isPressed)
         {
-            move += 1f;
-            _isRunning = true;
+            if (_canSprint) {
+                _canJump = _canCrouch = canShoot = false;
+                move += 1.25f;
+                _isSprinting = true;
+            }
+            else {
+                DisableExtraMovements();
+                move += 1f;
+                _isRunning = true;
+            }
+        }
+
+        if (Keyboard.current.wKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
         }
 
         if (Keyboard.current.sKey.isPressed)
         {
+            DisableExtraMovements();
             move -= 1f;
             _isRunningBackwards = true;
+        }
+
+        if (Keyboard.current.sKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
         }
         
         if (Keyboard.current.dKey.isPressed)
         {
+            DisableExtraMovements();
             look += 1f;
             _isRightStrafing = true;
         }
 
+        if (Keyboard.current.dKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
+        }
+
         if (Keyboard.current.aKey.isPressed)
         {
+            DisableExtraMovements();
             look -= 1f;
             _isLeftStrafing = true;
         }
 
-        if (Mouse.current.leftButton.isPressed) {
+        if (Keyboard.current.aKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
+        }
+
+        if (canShoot && Mouse.current.leftButton.isPressed) {
+            _canJump = _canCrouch = _canSprint = false;
             _isShooting = true;
 
             // Shoot sound
@@ -115,6 +151,7 @@ public class CharacterMover : MonoBehaviour
         
         // When player stops shooting
         if (Mouse.current.leftButton.wasReleasedThisFrame) {
+            AllowExtraMovements();
             _isShooting = false;
 
             if (_weaponSFX.isPlaying)
@@ -123,19 +160,30 @@ public class CharacterMover : MonoBehaviour
             }
         }
 
-        if (Keyboard.current.cKey.isPressed)
+        if (_canCrouch && Keyboard.current.cKey.isPressed)
         {
+            _canJump = canShoot = _canSprint = false;
             _isCrouching = true;
         }
 
-        if (!_isRunning && !_isShooting && Keyboard.current.leftShiftKey.isPressed) {
-            move += 1.25f;
-            _isSprinting = true;
+        if (Keyboard.current.cKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
+        }
+
+        if (Keyboard.current.leftShiftKey.isPressed) {
+            _canSprint = true;
+        }
+
+        if (Keyboard.current.leftShiftKey.wasReleasedThisFrame)
+        {
+            _canSprint = false;
         }
 
         // Cache the transform for performance
         Transform t = transform;
 
+        // Change the field of view
         if (Keyboard.current.fKey.wasPressedThisFrame) {
             GameManager.IsLocalLayer = !GameManager.IsLocalLayer;
             GameManager.ChangeLayer(GameManager.IsLocalLayer);
@@ -147,8 +195,14 @@ public class CharacterMover : MonoBehaviour
         // Calculate the forwards and backwards movement relative to the direction the character is facing.
         Vector3 movement = t.forward * (moveSpeed * move * Time.deltaTime);
 
-        if (_canJump && Keyboard.current.spaceKey.wasPressedThisFrame) {
+        if (_canJump && Keyboard.current.spaceKey.isPressed) {
+            canShoot = _canCrouch = _canSprint = false;
             StartCoroutine(JumpWithDelay());
+        }
+
+        if (Keyboard.current.spaceKey.wasReleasedThisFrame)
+        {
+            AllowExtraMovements();
         }
 
         // https://forum.unity.com/threads/restart-scene-key.812355/
@@ -156,7 +210,12 @@ public class CharacterMover : MonoBehaviour
             // Load the scene again
             GameManager.RestartGame();
             GameManager.ResetInstances();
-        } 
+        }
+
+        if (Keyboard.current.mKey.wasPressedThisFrame) {
+            SceneManager.LoadScene(GameManager.LoadMenu);
+            GameManager.EnableCursorMode();
+        }
         
         // Every frame apply gravity
         _velocity += gravity * Time.deltaTime;
@@ -184,6 +243,14 @@ public class CharacterMover : MonoBehaviour
         _animator.SetBool("_isJumping", _isJumping);
         _animator.SetBool("_isSprinting", _isSprinting);
         _animator.SetBool("_isCrouching", _isCrouching);
+    }
+
+    private void AllowExtraMovements() {
+        _canJump = canShoot = _canCrouch = _canSprint = true;
+    }
+
+    private void DisableExtraMovements() {
+        _canJump = canShoot = _canCrouch = _canSprint = false;
     }
 
     private void ResetMovementState() {
