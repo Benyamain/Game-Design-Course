@@ -21,6 +21,8 @@ public class HitScan : MonoBehaviour
 
     private LineRenderer _lr;
     private float _alpha = 1f;
+
+    private float damageAmount = 1f;
     
 
     private void Start()
@@ -39,7 +41,7 @@ public class HitScan : MonoBehaviour
 
         Vector3 p = rayStart.position;
 
-        if (characterMover.canShoot) {
+        if (characterMover.canShoot && !characterMover.isRunning && !characterMover.isRunningBackwards) {
             if (Physics.Raycast(p, rayStart.TransformDirection(Vector3.forward), out RaycastHit hit))
             {
                 SetLineRendererPositions(p, hit.point);
@@ -47,6 +49,11 @@ public class HitScan : MonoBehaviour
                 // Check if object hit has a collider
                 if (hit.collider != null && hit.collider.CompareTag("Destroyable")) {
                     Destroy(hit.collider.gameObject);
+                }
+
+                // Check if bullet hits enemy, then enemy takes damage
+                if (hit.collider != null && hit.collider.CompareTag("Enemy")) {
+                    hit.collider.gameObject.GetComponent<EnemyHealth>().TakeDamage(damageAmount);                    
                 }
             }
             else

@@ -18,4 +18,9 @@ public class GameplayController : MonoBehaviour
         enemyKillCount++;
         enemyKillCountTxt.text = "Monsters Killed: " + enemyKillCount;
     }
+
+    public void ResetText() {
+        enemyKillCount = 0;
+        enemyKillCountTxt.text = "Monsters Killed: " + enemyKillCount;
+    }
 }

@@ -18,9 +18,10 @@ public class PlayerHealth : MonoBehaviour
 
         health -= damageAmount;
         if (health <= 0) {
-            GameManager.PlayerDied();
+            GameManager.DisablePlayerCharacterController();
             GameManager.RestartGame();
             GameManager.ResetInstances();
+            GameManager.EnablePlayerCharacterController();
         }
 
         playerHealthSlider.value = health;

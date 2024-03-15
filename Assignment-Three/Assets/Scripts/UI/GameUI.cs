@@ -54,7 +54,7 @@ public class GameUI : BaseGameUI
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
         // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("NEW KEY", float.MaxValue)) && GameManager.ReachedEndzone)
+        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("NEW KEY", float.MaxValue)) && GameManager.ReachedEndzone && (GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.IsEnemyDead)
         {
             GameManager.BestTime = GameManager.CurrentTime;
             // Store in temporary as there is bug fix that resets and does not show the best time

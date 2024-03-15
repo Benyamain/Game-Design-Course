@@ -41,9 +41,9 @@ public class CharacterMover : MonoBehaviour
 
     [SerializeField]
     private Transform _playerTransform;
-    private bool _isRunning;
-    private bool _isRunningBackwards;
-    private bool _isLeftStrafing;
+    public bool isRunning;
+    public bool isRunningBackwards;
+    public bool _isLeftStrafing;
     private bool _isRightStrafing;
     private bool _isShooting;
     private bool _isJumping;
@@ -92,51 +92,59 @@ public class CharacterMover : MonoBehaviour
                 _isSprinting = true;
             }
             else {
-                DisableExtraMovements();
+                canShoot = _canCrouch = _canSprint = false;
                 move += 1f;
-                _isRunning = true;
+                isRunning = true;
+            }
+
+            if (_weaponSFX.isPlaying) {
+                _weaponSFX.Stop();
             }
         }
 
         if (Keyboard.current.wKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            _canJump = canShoot = _canCrouch = true;
         }
 
         if (Keyboard.current.sKey.isPressed)
         {
-            DisableExtraMovements();
+            canShoot = _canCrouch = _canSprint = false;
             move -= 1f;
-            _isRunningBackwards = true;
+            isRunningBackwards = true;
+
+            if (_weaponSFX.isPlaying) {
+                _weaponSFX.Stop();
+            }
         }
 
         if (Keyboard.current.sKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            _canJump = canShoot = _canCrouch = true;
         }
         
         if (Keyboard.current.dKey.isPressed)
         {
-            _canJump = _canCrouch = _canSprint = false;
+            _canCrouch = _canSprint = false;
             look += 1f;
             _isRightStrafing = true;
         }
 
         if (Keyboard.current.dKey.wasReleasedThisFrame)
         {
-            _canJump = _canCrouch = _canSprint = true;
+            _canJump = canShoot = _canCrouch = true;
         }
 
         if (Keyboard.current.aKey.isPressed)
         {
-            _canJump = _canCrouch = _canSprint = false;
+            _canCrouch = _canSprint = false;
             look -= 1f;
             _isLeftStrafing = true;
         }
 
         if (Keyboard.current.aKey.wasReleasedThisFrame)
         {
-            _canJump = _canCrouch = _canSprint = true;
+           _canJump = canShoot = _canCrouch = true;
         }
 
         if (canShoot && Mouse.current.leftButton.isPressed) {
@@ -144,14 +152,14 @@ public class CharacterMover : MonoBehaviour
             _isShooting = true;
 
             // Shoot sound
-            if (!_weaponSFX.isPlaying) {
+            if (!_weaponSFX.isPlaying && !isRunning && !isRunningBackwards) {
                 _weaponSFX.Play();
             }
         }
         
         // When player stops shooting
         if (Mouse.current.leftButton.wasReleasedThisFrame) {
-            AllowExtraMovements();
+            _canJump = _canCrouch = true;
             _isShooting = false;
 
             if (_weaponSFX.isPlaying)
@@ -168,7 +176,7 @@ public class CharacterMover : MonoBehaviour
 
         if (Keyboard.current.cKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            _canJump = canShoot = true;
         }
 
         if (Keyboard.current.leftShiftKey.isPressed) {
@@ -202,7 +210,7 @@ public class CharacterMover : MonoBehaviour
 
         if (Keyboard.current.spaceKey.wasReleasedThisFrame)
         {
-            AllowExtraMovements();
+            canShoot = _canCrouch = true;
         }
 
         // https://forum.unity.com/threads/restart-scene-key.812355/
@@ -210,6 +218,7 @@ public class CharacterMover : MonoBehaviour
             // Load the scene again
             GameManager.RestartGame();
             GameManager.ResetInstances();
+            GameplayController.instance.ResetText();
         }
 
         if (Keyboard.current.mKey.wasPressedThisFrame) {
@@ -228,19 +237,13 @@ public class CharacterMover : MonoBehaviour
         // Apply the walking movement and the vertical velocity to the character.
         GameManager.PlayerCharacterController.Move(new(movement.x, _velocity, movement.z));
 
-        // Ultimately, this will check if we have collected all the coins and are at the endzone so you earned this dance move!
-        // Add GUI element to hint for the keypress
-        if ((GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.ReachedEndzone) {
-            // TODO
-        }
-
         // Update animator based on movement states
         UpdateAnimator();
     }
 
     private void UpdateAnimator() {
-        _animator.SetBool("_isRunning", _isRunning);
-        _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
+        _animator.SetBool("_isRunning", isRunning);
+        _animator.SetBool("_isRunningBackwards", isRunningBackwards);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
         _animator.SetBool("_isShooting", _isShooting);
@@ -258,8 +261,8 @@ public class CharacterMover : MonoBehaviour
     }
 
     private void ResetMovementState() {
-        _isRunning = false;
-        _isRunningBackwards = false;
+        isRunning = false;
+        isRunningBackwards = false;
         _isLeftStrafing = false;
         _isRightStrafing = false;
         _isShooting = false;

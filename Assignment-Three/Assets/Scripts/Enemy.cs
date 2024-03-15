@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
 
     [SerializeField]
-    private float speed = 2f;
+    private float moveSpeed = 5f;
 
     [SerializeField]
     private float rotationSpeed = 2f;
@@ -34,11 +34,12 @@ public class Enemy : MonoBehaviour
     private float gravity = -2f;
 
     [SerializeField]
-    private float terminalVelocity = -1f;
     private float _velocity;
 
     private Vector2 _move;
     private float _look;
+    private float damageAmount = 20f;
+    private bool _isAttacking = false;
 
     private void Start()
     {
@@ -85,14 +86,6 @@ public class Enemy : MonoBehaviour
             _isLeftStrafing = true;
         }
 
-        // Every frame apply gravity
-        _velocity += gravity * Time.deltaTime;
-
-        if (_velocity < terminalVelocity)
-        {
-            _velocity = terminalVelocity;
-        }
-
         // Check if the player is within arms reach for melee
         float distanceToPlayer = Vector3.Distance(transform.position, GameManager.Player.transform.position);
 
@@ -105,32 +98,68 @@ public class Enemy : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(_moveDirection);
 
             // Smoothly rotate towards the target rotation
+            // https://docs.unity3d.com/ScriptReference/Quaternion.Slerp.html
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
+            _velocity += gravity * Time.deltaTime;
+
+            // Keep the enemy grounded by setting the y-component of the movement direction
+            // to a negative value equal to the current downward velocity
+            Vector3 movement = _moveDirection * moveSpeed * Time.deltaTime;
+            movement.y = _velocity * Time.deltaTime;
+
             // Move towards the player
-            _controller.Move(_moveDirection * speed * Time.deltaTime);
-            
-            // Player is within arms reach, trigger the melee animation
-            if (distanceToPlayer <= meleeRange) {
-                _canMelee = true;
-                _isMelee = true;
+            _controller.Move(movement);
+
+            // Check if the player is within arms reach for melee
+            if (distanceToPlayer <= meleeRange && _canMelee)
+            {
+                // _isMelee = true;
+
+                float time = 0f;
+                _animator.Play("Melee", 0, 0f);
+                time += Time.deltaTime;
+
+                // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && (time <= _animator.GetCurrentAnimatorStateInfo(0).normalizedTime)) {
+                //     GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+                //     time = 0f;
+                // }
+
+                // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f) {
+                //     _canMelee = true;
+                //     _animator.Play("Melee", 0, 0f);
+                //     _isAttacking = true;
+                // }
+            }
+            else
+            {
+                // _isMelee = false;
+                // _isAttacking = false;
             }
 
             // Update animator based on movement and attack states
             UpdateAnimator();
-
-            // TODO: Fix issue of the melee animation not looping while being close to player
-            // TODO: Ground the enemy (freezing the y axis so maybe that is why)
-            // TODO: Fix sprint issue with player randomly activating when not pressing on left shift
-            // TODO: Fix forward animation of enemy not working properly
-
-            // if (_controller.isGrounded)
-            // {
-            //     // Jump when the space key is pressed and otherwise set the velocity to 0.
-            //     _velocity = Keyboard.current.spaceKey.wasPressedThisFrame ? jumpForce : 0;
-            // }
+            // DamagePlayer();
         }
     }
+
+    private void DamagePlayer() {
+        if (_isAttacking) {
+            GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+        }
+    }
+
+    // TODO: Fix Player taking way too much damage from Enemy hit.
+    // private void OnControllerColliderHit(ControllerColliderHit hit) {
+    //     if (hit.collider.CompareTag("Player"))
+    //     {
+    //         GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+    //     }
+    // }
+
+    // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f) {
+    //     GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+    // }
 
     private void OrientateToPlayer()
     {
@@ -148,7 +177,7 @@ public class Enemy : MonoBehaviour
         _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
-        _animator.SetBool("_isMelee", _canMelee ? _isMelee : false);
+        // _animator.SetBool("_isMelee", _isMelee);
         // _animator.SetBool("_isKicking", _isKicking);
     }
 

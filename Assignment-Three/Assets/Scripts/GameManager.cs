@@ -44,14 +44,13 @@ public class GameManager : MonoBehaviour
         PlayerCameraCrosshair.SetActive(true);
         WeaponCameraCrosshair.SetActive(false);
 
-        Cursor.lockState  = CursorLockMode.Locked;
-        Cursor.visible = false;
+        DisableCursorMode();
     }
 
-    public static void PlayerDied() {
-        IsPlayerDead = true;
-        Destroy(Player);
-    }
+    // public static void PlayerDied() {
+    //     IsPlayerDead = true;
+    //     Destroy(Player);
+    // }
 
     public static void EnemyDied() {
         IsEnemyDead = true;
@@ -79,12 +78,12 @@ public class GameManager : MonoBehaviour
     }
 
     public static void EnableCursorMode() {
-            Cursor.lockState  = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
     }
 
     public static void DisableCursorMode() {
-            Cursor.lockState  = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
     }
     
