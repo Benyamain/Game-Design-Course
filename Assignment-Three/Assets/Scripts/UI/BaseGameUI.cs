@@ -94,6 +94,9 @@ public abstract class BaseGameUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameLevelButton.clicked -= LoadLevel;
+        if (GameLevelButton != null)
+        {
+            GameLevelButton.clicked -= LoadLevel;
+        }
     }
 }

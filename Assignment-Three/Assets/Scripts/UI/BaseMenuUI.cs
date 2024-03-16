@@ -11,10 +11,10 @@ public abstract class BaseMenuUI : MonoBehaviour
     /// The button to switch between the game and menu.
     /// </summary>
     protected Button MenuLevelButton;
-    
+
     // Start is called before the first frame update
     protected virtual void Start()
-    {
+    {        
         // Get the component with our UI so we can they query it for the parts we want.
         UIDocument document = GetComponent<UIDocument>();
 
@@ -35,6 +35,9 @@ public abstract class BaseMenuUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        MenuLevelButton.clicked -= LoadLevel;
+        if (MenuLevelButton != null)
+        {
+            MenuLevelButton.clicked -= LoadLevel;
+        }
     }
 }

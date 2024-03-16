@@ -11,8 +11,9 @@ public class GameManager : MonoBehaviour
     public static int MaxSkulls = 5;
     public static float CurrentTime = 0f;
     public static float BestTime = 0f;
+    public static int LoadCutscene = 0;
     public static int LoadMenu = 1;
-    public static int LoadGame = 0;
+    public static int LoadGame = 2;
     public static bool ReachedEndzone = false;
     public static bool IsLocalLayer = false;
     public static Camera GunCamera;
@@ -28,6 +29,14 @@ public class GameManager : MonoBehaviour
     public static Vector3 CheckpointScale = new(2f, 2f, 2f);
     public static bool IsPlayerDead;
     public static bool IsEnemyDead;
+    public static bool WasCutsceneLoaded = false;
+
+    private void Awake() {
+        if (!WasCutsceneLoaded) {
+            SceneManager.LoadScene(GameManager.LoadCutscene);
+            WasCutsceneLoaded = true;
+        }
+    }
 
     private void Start()
     {

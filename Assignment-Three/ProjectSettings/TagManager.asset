@@ -11,6 +11,7 @@ TagManager:
   - Destroyable
   - Enemy
   - Elimination
+  - Black Screen
   layers:
   - Default
   - TransparentFX
