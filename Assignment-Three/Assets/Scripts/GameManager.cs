@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public static GameObject PlayerCameraCrosshair;
     public static GameObject WeaponCameraCrosshair;
     public static CharacterController PlayerCharacterController;
-    public static Vector3 CheckpointPosition = new(-35.96f, 44.36f, -63.42f);
+    public static Vector3 CheckpointPosition = new(-16.39f, 12.86f, -2.83f);
     public static Vector3 CheckpointRotation = new(0f, 110.43f, 0f);
     public static Vector3 CheckpointScale = new(2f, 2f, 2f);
     public static bool IsPlayerDead;

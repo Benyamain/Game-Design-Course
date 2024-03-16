@@ -27,7 +27,6 @@ public class Enemy : MonoBehaviour
     private bool _isLeftStrafing;
     private bool _isRightStrafing;
     private bool _isMelee;
-    private bool _canMelee = true;
     // private bool _isKicking;
 
     [SerializeField]
@@ -38,8 +37,16 @@ public class Enemy : MonoBehaviour
 
     private Vector2 _move;
     private float _look;
-    private float damageAmount = 20f;
-    private bool _isAttacking = false;
+
+    [SerializeField]
+    private float attackWaitTime = 2.5f;
+    private float _attackTimer;
+    [SerializeField]
+    private float attackFinishedWaitTime = 0.5f;
+    private float _attackFinishedTimer;
+
+    [SerializeField]
+    private EnemyDamageArea enemyDamageArea;
 
     private void Start()
     {
@@ -111,55 +118,19 @@ public class Enemy : MonoBehaviour
             // Move towards the player
             _controller.Move(movement);
 
-            // Check if the player is within arms reach for melee
-            if (distanceToPlayer <= meleeRange && _canMelee)
+            if (distanceToPlayer <= meleeRange)
             {
-                // _isMelee = true;
-
-                float time = 0f;
-                _animator.Play("Melee", 0, 0f);
-                time += Time.deltaTime;
-
-                // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && (time <= _animator.GetCurrentAnimatorStateInfo(0).normalizedTime)) {
-                //     GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
-                //     time = 0f;
-                // }
-
-                // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f) {
-                //     _canMelee = true;
-                //     _animator.Play("Melee", 0, 0f);
-                //     _isAttacking = true;
-                // }
-            }
-            else
-            {
-                // _isMelee = false;
-                // _isAttacking = false;
+                _isMelee = true;
+                CheckIfAttackFinished();
+                Attack();
             }
 
             // Update animator based on movement and attack states
             UpdateAnimator();
-            // DamagePlayer();
-        }
-    }
-
-    private void DamagePlayer() {
-        if (_isAttacking) {
-            GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
         }
     }
 
     // TODO: Fix Player taking way too much damage from Enemy hit.
-    // private void OnControllerColliderHit(ControllerColliderHit hit) {
-    //     if (hit.collider.CompareTag("Player"))
-    //     {
-    //         GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
-    //     }
-    // }
-
-    // if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Melee") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f) {
-    //     GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
-    // }
 
     private void OrientateToPlayer()
     {
@@ -177,7 +148,7 @@ public class Enemy : MonoBehaviour
         _animator.SetBool("_isRunningBackwards", _isRunningBackwards);
         _animator.SetBool("_isLeftStrafing", _isLeftStrafing);
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
-        // _animator.SetBool("_isMelee", _isMelee);
+        _animator.SetBool("_isMelee", _isMelee);
         // _animator.SetBool("_isKicking", _isKicking);
     }
 
@@ -189,5 +160,23 @@ public class Enemy : MonoBehaviour
         _isRightStrafing = false;
         _isMelee = false;
         // _isKicking = false;
+    }
+
+    private void CheckIfAttackFinished() {
+        if (Time.time > _attackFinishedTimer) _animator.Play("Standing Idle", 0, 0f);
+    }
+
+    private void Attack() {
+        if (Time.time > _attackTimer)
+        {
+            _attackFinishedTimer = Time.time + attackFinishedWaitTime;
+            _attackTimer = Time.time + attackWaitTime;
+
+            _animator.Play("Melee", 0, 0.25f);
+
+            // Activate the damage area when attacking
+            enemyDamageArea.gameObject.SetActive(true);
+            enemyDamageArea.ResetDeactivateTimer();
+        }
     }
 }

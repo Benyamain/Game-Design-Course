@@ -20,7 +20,7 @@ public class CharacterMover : MonoBehaviour
     [Tooltip("How fast to turn in degrees.")]
     [Min(float.Epsilon)]
     [SerializeField]
-    private float lookSpeed = 180f;
+    private float lookSpeed = 8f;
 
     [Tooltip("How much velocity to add for jumping.")]
     [Min(float.Epsilon)]
@@ -56,7 +56,16 @@ public class CharacterMover : MonoBehaviour
     private bool _canSprint = false;
     private bool _canCrouch = true;
 
-    // private bool _playerDied;
+    private Vector3 _gunCameraRelativePosition = new Vector3(-0.49f, -0.18f, 0.45f);
+    private Vector3 _mainCameraRelativePosition = new Vector3(0.735f, 1.531f, -0.318f);
+    private Vector3 _gunCameraRelativeRotation = new Vector3(0, 324.925476f, 0);
+    private Vector3 _mainCameraRelativeRotation = new Vector3(0, 336.929016f, 0);
+
+    [Tooltip("How sensitive the mouse input should be.")]
+    [Min(float.Epsilon)]
+    [SerializeField]
+    private float mouseSensitivity = 1f;
+    private float _verticalRotation = 0f;
 
     /// <summary>
     /// The vertical velocity to handle jumping and falling.
@@ -80,20 +89,22 @@ public class CharacterMover : MonoBehaviour
         // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
 
-        // Variables to hold our movement (forwards and back) and looking (right and left) data.
-        float move = 0f;
-        float look = 0f;
+        // Cache the transform for performance
+        Transform t = transform;
+
+        // Calculate the forwards and backwards movement relative to the direction the character is facing.
+        Vector3 movement = new Vector3(0f, 0f, 0f);
         
         if (Keyboard.current.wKey.isPressed)
         {
             if (_canSprint) {
                 _canCrouch = canShoot = false;
-                move += 1.25f;
+                movement += transform.forward * moveSpeed * 1.25f * Time.deltaTime;
                 _isSprinting = true;
             }
             else {
                 canShoot = _canCrouch = _canSprint = false;
-                move += 1f;
+                movement += transform.forward * moveSpeed * Time.deltaTime;
                 isRunning = true;
             }
 
@@ -110,7 +121,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.sKey.isPressed)
         {
             canShoot = _canCrouch = _canSprint = false;
-            move -= 1f;
+            movement -= transform.forward * moveSpeed * Time.deltaTime;
             isRunningBackwards = true;
 
             if (_weaponSFX.isPlaying) {
@@ -126,7 +137,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.dKey.isPressed)
         {
             _canCrouch = _canSprint = false;
-            look += 1f;
+            movement += transform.right * moveSpeed * Time.deltaTime;
             _isRightStrafing = true;
         }
 
@@ -138,7 +149,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.aKey.isPressed)
         {
             _canCrouch = _canSprint = false;
-            look -= 1f;
+            movement -= transform.right * moveSpeed * Time.deltaTime;
             _isLeftStrafing = true;
         }
 
@@ -188,21 +199,12 @@ public class CharacterMover : MonoBehaviour
             _canSprint = false;
         }
 
-        // Cache the transform for performance
-        Transform t = transform;
-
         // Change the field of view
         if (Keyboard.current.fKey.wasPressedThisFrame) {
             GameManager.IsLocalLayer = !GameManager.IsLocalLayer;
             GameManager.ChangeLayer(GameManager.IsLocalLayer);
         }
         
-        // Rotate on the y (green) axis for turning.
-        t.Rotate(0, look * lookSpeed * Time.deltaTime, 0);
-
-        // Calculate the forwards and backwards movement relative to the direction the character is facing.
-        Vector3 movement = t.forward * (moveSpeed * move * Time.deltaTime);
-
         if (_canJump && Keyboard.current.spaceKey.isPressed) {
             canShoot = _canCrouch = _canSprint = false;
             StartCoroutine(JumpWithDelay());
@@ -235,7 +237,17 @@ public class CharacterMover : MonoBehaviour
         }
 
         // Apply the walking movement and the vertical velocity to the character.
-        GameManager.PlayerCharacterController.Move(new(movement.x, _velocity, movement.z));
+        GameManager.PlayerCharacterController.Move(movement + new Vector3(0f, _velocity, 0f));
+
+        // Get mouse input for rotation
+        Vector2 mouseInput = Mouse.current.delta.ReadValue();
+
+        // Rotate the character based on mouse input
+        _verticalRotation -= mouseInput.y * lookSpeed * mouseSensitivity * Time.deltaTime;
+        _verticalRotation = Mathf.Clamp(_verticalRotation, -60f, 60f);
+        GameManager.MainCamera.transform.localRotation = Quaternion.Euler(_verticalRotation, 0f, 0f);
+
+        transform.Rotate(Vector3.up * mouseInput.x * lookSpeed * mouseSensitivity * Time.deltaTime, Space.Self);
 
         // Update animator based on movement states
         UpdateAnimator();

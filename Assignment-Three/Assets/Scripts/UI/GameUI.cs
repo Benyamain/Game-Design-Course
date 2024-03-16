@@ -53,18 +53,18 @@ public class GameUI : BaseGameUI
         ScoreLabel.text = "Skulls: " + GameManager.SkullCount.ToString() + " of " + GameManager.MaxSkulls.ToString();
         TimeLabel.text = "Time: " + GameManager.CurrentTime.ToString("F2") + " s";
 
-        // Check if the current time is less than the existing best time once player is in endzone and has all coins.
-        if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("NEW KEY", float.MaxValue)) && GameManager.ReachedEndzone && (GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.IsEnemyDead)
-        {
-            GameManager.BestTime = GameManager.CurrentTime;
-            // Store in temporary as there is bug fix that resets and does not show the best time
-            _bestTime = GameManager.BestTime;
+        if (GameManager.ReachedEndzone && (GameManager.SkullCount == GameManager.MaxSkulls) && GameManager.IsEnemyDead) {
+            // Check if the current time is less than the existing best time once player is in endzone and has all coins.
+            if ((GameManager.CurrentTime < PlayerPrefs.GetFloat("NEW KEY", float.MaxValue))) {
+                GameManager.BestTime = GameManager.CurrentTime;
+                // Store in temporary as there is bug fix that resets and does not show the best time
+                _bestTime = GameManager.BestTime;
 
-            // Set new best time
-            PlayerPrefs.SetFloat("NEW KEY", _bestTime);
+                // Set new best time
+                PlayerPrefs.SetFloat("NEW KEY", _bestTime);
+            }
 
-            // Load the scene again
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.RestartGame();
             GameManager.ResetInstances();
         }
     }
