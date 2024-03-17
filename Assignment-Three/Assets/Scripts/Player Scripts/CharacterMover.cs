@@ -56,11 +56,6 @@ public class CharacterMover : MonoBehaviour
     private bool _canSprint = false;
     private bool _canCrouch = true;
 
-    private Vector3 _gunCameraRelativePosition = new Vector3(-0.49f, -0.18f, 0.45f);
-    private Vector3 _mainCameraRelativePosition = new Vector3(0.735f, 1.531f, -0.318f);
-    private Vector3 _gunCameraRelativeRotation = new Vector3(0, 324.925476f, 0);
-    private Vector3 _mainCameraRelativeRotation = new Vector3(0, 336.929016f, 0);
-
     [Tooltip("How sensitive the mouse input should be.")]
     [Min(float.Epsilon)]
     [SerializeField]
@@ -89,9 +84,6 @@ public class CharacterMover : MonoBehaviour
         // Before moving every frame, reset animator states, which means player is idle
         ResetMovementState();
 
-        // Cache the transform for performance
-        Transform t = transform;
-
         // Calculate the forwards and backwards movement relative to the direction the character is facing.
         Vector3 movement = new Vector3(0f, 0f, 0f);
         
@@ -99,12 +91,12 @@ public class CharacterMover : MonoBehaviour
         {
             if (_canSprint) {
                 _canCrouch = canShoot = false;
-                movement += transform.forward * moveSpeed * 1.25f * Time.deltaTime;
+                movement += GameManager.Player.transform.forward * moveSpeed * 1.25f * Time.deltaTime;
                 _isSprinting = true;
             }
             else {
                 canShoot = _canCrouch = _canSprint = false;
-                movement += transform.forward * moveSpeed * Time.deltaTime;
+                movement += GameManager.Player.transform.forward * moveSpeed * Time.deltaTime;
                 isRunning = true;
             }
 
@@ -121,7 +113,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.sKey.isPressed)
         {
             canShoot = _canCrouch = _canSprint = false;
-            movement -= transform.forward * moveSpeed * Time.deltaTime;
+            movement -= GameManager.Player.transform.forward * moveSpeed * Time.deltaTime;
             isRunningBackwards = true;
 
             if (_weaponSFX.isPlaying) {
@@ -137,7 +129,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.dKey.isPressed)
         {
             _canCrouch = _canSprint = false;
-            movement += transform.right * moveSpeed * Time.deltaTime;
+            movement += GameManager.Player.transform.right * moveSpeed * Time.deltaTime;
             _isRightStrafing = true;
         }
 
@@ -149,7 +141,7 @@ public class CharacterMover : MonoBehaviour
         if (Keyboard.current.aKey.isPressed)
         {
             _canCrouch = _canSprint = false;
-            movement -= transform.right * moveSpeed * Time.deltaTime;
+            movement -= GameManager.Player.transform.right * moveSpeed * Time.deltaTime;
             _isLeftStrafing = true;
         }
 
@@ -248,6 +240,34 @@ public class CharacterMover : MonoBehaviour
         GameManager.MainCamera.transform.localRotation = Quaternion.Euler(_verticalRotation, 0f, 0f);
 
         transform.Rotate(Vector3.up * mouseInput.x * lookSpeed * mouseSensitivity * Time.deltaTime, Space.Self);
+
+        // if (Physics.Raycast(GameManager.Player.transform.position, GameManager.Player.transform.forward, out RaycastHit hit))
+        // {
+        //     if (hit.collider != null && hit.collider.CompareTag("Environment"))
+        //     {
+        //         Vector3 newCameraPosition;
+        //         float distanceToCollision;
+
+        //         if (GameManager.IsLocalLayer)
+        //         {
+        //             // Calculate the distance between the camera and the collision point in x and z axes only
+        //             distanceToCollision = Vector3.Distance(new Vector3(GameManager.GunCamera.transform.localPosition.x, 0f, GameManager.GunCamera.transform.localPosition.z), new Vector3(hit.point.x, 0f, hit.point.z));
+
+        //             // Calculate the new camera position based on the distance
+        //             newCameraPosition = GameManager.GunCamera.transform.localPosition - hit.normal * distanceToCollision;
+        //             GameManager.GunCamera.transform.localPosition = newCameraPosition;
+        //         }
+        //         else
+        //         {
+        //             // Calculate the distance between the camera and the collision point in x and z axes only
+        //             distanceToCollision = Vector3.Distance(new Vector3(GameManager.MainCamera.transform.localPosition.x, 0f, GameManager.MainCamera.transform.localPosition.z), new Vector3(hit.point.x, 0f, hit.point.z));
+
+        //             // Calculate the new camera position based on the distance
+        //             newCameraPosition = GameManager.MainCamera.transform.localPosition - hit.normal * distanceToCollision;
+        //             GameManager.MainCamera.transform.localPosition = newCameraPosition;
+        //         }
+        //     }
+        // }
 
         // Update animator based on movement states
         UpdateAnimator();

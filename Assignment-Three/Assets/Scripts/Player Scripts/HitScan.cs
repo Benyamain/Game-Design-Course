@@ -22,6 +22,7 @@ public class HitScan : MonoBehaviour
     private LineRenderer _lr;
     private float _alpha = 1f;
 
+    [SerializeField]
     private float damageAmount = 1f;
     
 
@@ -39,12 +40,16 @@ public class HitScan : MonoBehaviour
             return;
         }
 
-        Vector3 p = rayStart.position;
+        // Idea of implementation inspired by Ethan Scheys
+        Ray ray = GameManager.MainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         if (characterMover.canShoot && !characterMover.isRunning && !characterMover.isRunningBackwards) {
-            if (Physics.Raycast(p, rayStart.TransformDirection(Vector3.forward), out RaycastHit hit))
-            {
-                SetLineRendererPositions(p, hit.point);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {                
+                SetLineRendererPositions(rayStart.position, hit.point);
+                
+                // Render the line renderer from the MainCamera's perspective
+                // SetLineRendererPositions(GameManager.MainCamera.WorldToViewportPoint(rayStart.position), GameManager.MainCamera.WorldToViewportPoint(hit.point));
 
                 // Check if object hit has a collider
                 if (hit.collider != null && hit.collider.CompareTag("Destroyable")) {
@@ -58,7 +63,10 @@ public class HitScan : MonoBehaviour
             }
             else
             {
-                SetLineRendererPositions(p, p + rayStart.TransformDirection(Vector3.forward) * 1000);
+                SetLineRendererPositions(rayStart.position, rayStart.position + ray.direction * 1000);
+                
+                // Render the line renderer from the MainCamera's perspective
+                // SetLineRendererPositions(GameManager.MainCamera.WorldToViewportPoint(rayStart.position), GameManager.MainCamera.WorldToViewportPoint(rayStart.position + ray.direction * 1000));
             }
 
             SetLineRendererWidth();
@@ -75,6 +83,13 @@ public class HitScan : MonoBehaviour
 
     private void SetLineRendererPositions(Vector3 start, Vector3 end)
     {
+        // if (GameManager.IsLocalLayer)
+        // {
+        //     // Transform the start and end points to the GunCamera's view space
+        //     start = GameManager.GunCamera.WorldToViewportPoint(start);
+        //     end = GameManager.GunCamera.WorldToViewportPoint(end);
+        // }
+
         _lr.positionCount = 2;
         _lr.SetPositions(new[] { start, end });
     }

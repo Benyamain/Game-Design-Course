@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - Elimination
   - Black Screen
+  - Environment
   layers:
   - Default
   - TransparentFX
