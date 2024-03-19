@@ -22,7 +22,7 @@ public class EnemyDamageArea : MonoBehaviour
             if (canDealDamage)
             {
                 canDealDamage = false;
-                GameManager.Player.GetComponent<PlayerHealth>().TakeDamage(damageAmount);
+                GameManager.PlayerTakeDamage(damageAmount);
             }
         }
 

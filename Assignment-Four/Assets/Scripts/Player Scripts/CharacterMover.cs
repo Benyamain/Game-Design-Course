@@ -49,7 +49,7 @@ public class CharacterMover : MonoBehaviour
     private bool _isJumping;
     private bool _isSprinting;
     private bool _isCrouching;
-    private float _stopwatch;
+    private int _stopwatch;
     private AudioSource _weaponSFX;
     public bool canShoot = true;
     private bool _canJump = true;
@@ -75,8 +75,6 @@ public class CharacterMover : MonoBehaviour
 
     private void Update()
     {
-        // https://forum.unity.com/threads/trying-to-make-a-stopwatch-with-time-deltatime.1223490/
-        _stopwatch += Time.deltaTime;
         // Display to UI
         GameManager.CurrentScore = _stopwatch;
 

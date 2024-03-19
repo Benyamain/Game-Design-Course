@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class GameUI : BaseGameUI
 {    
     private float _highScore;
-    private PlayerHealth _playerHealth;
     
     // https://forum.unity.com/threads/how-do-i-make-my-code-only-display-1-or-2-numbers-after-the-decimal.370059/
     
@@ -26,7 +25,7 @@ public class GameUI : BaseGameUI
 
         CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString();
 
-        //HealthLabel.text = "Health: " + _playerHealth.ToString();
+        HealthLabel.text = "Health: " + GameManager.PlayerHealth.ToString();
 
         JumpLabel.text = "Jump (Spacebar)";
 
@@ -43,7 +42,7 @@ public class GameUI : BaseGameUI
     private void Update()
     {
         CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString("F0");
-        //HealthLabel.text = "Health: " + _playerHealth.ToString();
+        HealthLabel.text = "Health: " + GameManager.PlayerHealth.ToString();
 
         if ((GameManager.HealthPickupCount == GameManager.MaxHealthPickupCount) && GameManager.IsEnemyDead) {
             // Check if the current time is less than the existing best time once player is in endzone and has all coins.

@@ -50,7 +50,7 @@ public class HitScan : MonoBehaviour
 
                 // Check if bullet hits enemy, then enemy takes damage
                 if (hit.collider != null && hit.collider.CompareTag("Enemy")) {
-                    hit.collider.gameObject.GetComponent<EnemyHealth>().TakeDamage(damageAmount);                    
+                    GameManager.EnemyTakeDamage(damageAmount);                    
                 }
             }
             else

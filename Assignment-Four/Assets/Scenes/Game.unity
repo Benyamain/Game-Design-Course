@@ -38099,7 +38099,7 @@ GameObject:
   - component: {fileID: 794730113}
   m_Layer: 5
   m_Name: Enemy Health Slider
-  m_TagString: Untagged
+  m_TagString: EnemyHealthSlider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
