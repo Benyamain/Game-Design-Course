@@ -1,0 +1,9 @@
+SwatWalkBackwardWeapon.fbx filter=lfs diff=lfs merge=lfs -text
+SwatWalkLeftWeapon.fbx filter=lfs diff=lfs merge=lfs -text
+SwatRifleFire.fbx filter=lfs diff=lfs merge=lfs -text
+SwatWalkForwardWeapon.fbx filter=lfs diff=lfs merge=lfs -text
+SwatWalkRightWeapon.fbx filter=lfs diff=lfs merge=lfs -text
+SwatIdleWeapon.fbx filter=lfs diff=lfs merge=lfs -text
+SwatRifleJump.fbx filter=lfs diff=lfs merge=lfs -text
+SwatWeaponRun.fbx filter=lfs diff=lfs merge=lfs -text
+SwatStandToCrouchWithRifle.fbx filter=lfs diff=lfs merge=lfs -text

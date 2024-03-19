@@ -1,0 +1,7 @@
+MonsterCrouchWalkRight.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterCrouchWalkBack.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterStandingKick.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterCrouchWalkForward.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterStandingMelee.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterCrouchWalkLeft.fbx filter=lfs diff=lfs merge=lfs -text
+MonsterCrouchIdle.fbx filter=lfs diff=lfs merge=lfs -text
