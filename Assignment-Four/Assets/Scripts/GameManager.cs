@@ -1,15 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     // https://forum.unity.com/threads/help-how-do-you-set-up-a-gamemanager.131170/
-    public static int HealthPickupCount = 0;
-    public static int MaxHealthPickupCount = 5;
     public static int CurrentScore = 0;
     public static int HighScore = 0;
     public static int LoadMenu = 0;
@@ -17,13 +14,15 @@ public class GameManager : MonoBehaviour
     public static Camera MainCamera;
     public static GameObject Player;
     public static GameObject Enemy;
-    public static GameObject EnemyHealthSlider;
+    public static GameObject EnemyHealthSliderGameObject;
     public static CharacterController PlayerCharacterController;
+    public static CharacterController EnemyCharacterController;
     public static bool IsPlayerDead;
     public static bool IsEnemyDead;
     public static bool WasMenuLoaded = false;
     public static float PlayerHealth = 100f;
     public static float EnemyHealth = 100f;
+    public static Slider EnemyHealthSlider;
 
     private void Awake() {
         if (!WasMenuLoaded) {
@@ -37,14 +36,18 @@ public class GameManager : MonoBehaviour
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         Player = GameObject.FindGameObjectWithTag("Player");
         Enemy = GameObject.FindGameObjectWithTag("Enemy");
-        EnemyHealthSlider = GameObject.FindGameObjectWithTag("EnemyHealthSlider");
         PlayerCharacterController = Player.GetComponent<CharacterController>();
+        EnemyCharacterController = Enemy.GetComponent<CharacterController>();
+        EnemyHealthSliderGameObject = GameObject.FindGameObjectWithTag("EnemyHealthSlider");
+
+        SetEnemyHealthSlider();
     }
 
-    // public static void PlayerDied() {
-    //     IsPlayerDead = true;
-    //     Destroy(Player);
-    // }
+    public static void SetEnemyHealthSlider() {
+        if (EnemyHealthSliderGameObject != null) {
+            EnemyHealthSlider = EnemyHealthSliderGameObject.GetComponent<Slider>();
+        }
+    }
 
     public static void EnemyDied() {
         CurrentScore++;
@@ -70,9 +73,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void DisableEnemyCharacterController() {
+        if (EnemyCharacterController != null)
+        {
+            EnemyCharacterController.enabled = false;
+        }
+    }
+
+    public static void EnableEnemyCharacterController() {
+        if (EnemyCharacterController != null)
+        {
+            EnemyCharacterController.enabled = true;
+        }
+    }
+
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b
     public static void AddHealthPickup() {
-        ++HealthPickupCount;
+        PlayerHealth = PlayerHealth >= 80f ? PlayerHealth = 100f : PlayerHealth += 20f;
     }
 
     public static void PlayerTakeDamage(float damageAmount) {
@@ -81,31 +98,31 @@ public class GameManager : MonoBehaviour
         }
 
         PlayerHealth -= damageAmount;
+
         if (PlayerHealth <= 0) {
             DisablePlayerCharacterController();
-            RestartGame();
-            ResetInstances();
-            EnablePlayerCharacterController();
+            DisableEnemyCharacterController();
         }
     }
 
     public static void EnemyTakeDamage(float damageAmount) {
-        if (EnemyHealth <= 0) return;
+        if (EnemyHealth <= 0f) return;
+        
         EnemyHealth -= damageAmount;
 
-        if (EnemyHealth <= 0f)
+        if (EnemyHealth <= 0)
         {
-            EnemyHealth = 0;
+            EnemyHealth = 0f;
             EnemyDied();
         }
 
-        // EnemyHealthSlider.value = EnemyHealth;
+        if (EnemyHealthSlider != null) {
+            EnemyHealthSlider.value = EnemyHealth;
+        }
     }
 
     // Reset values just to be safe
     public static void ResetInstances() {
-        HealthPickupCount = 0;
-        MaxHealthPickupCount = 5;
         CurrentScore = 0;
         PlayerHealth = 100f;
         EnemyHealth = 100f;

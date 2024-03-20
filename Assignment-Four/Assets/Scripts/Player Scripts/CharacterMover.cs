@@ -203,7 +203,10 @@ public class CharacterMover : MonoBehaviour
             // Load the scene again
             GameManager.RestartGame();
             GameManager.ResetInstances();
-            GameplayController.instance.ResetText();
+            
+            // New additions
+            GameManager.EnablePlayerCharacterController();
+            GameManager.EnableEnemyCharacterController();
         }
 
         if (Keyboard.current.mKey.wasPressedThisFrame) {
