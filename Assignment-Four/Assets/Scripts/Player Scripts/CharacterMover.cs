@@ -40,7 +40,7 @@ public class CharacterMover : MonoBehaviour
     private Animator _animator;
 
     [SerializeField]
-    private Transform _playerTransform;
+    private Transform playerTransform;
     public bool isRunning;
     public bool isRunningBackwards;
     public bool _isLeftStrafing;
@@ -69,7 +69,7 @@ public class CharacterMover : MonoBehaviour
     private void Start()
     {
         // Get animator attached on the player
-        _animator = _playerTransform.gameObject.GetComponent<Animator>();
+        _animator = playerTransform.gameObject.GetComponent<Animator>();
         _weaponSFX = GetComponent<AudioSource>();
     }
 
@@ -203,7 +203,7 @@ public class CharacterMover : MonoBehaviour
             // Load the scene again
             GameManager.RestartGame();
             GameManager.ResetInstances();
-            
+
             // New additions
             GameManager.EnablePlayerCharacterController();
             GameManager.EnableEnemyCharacterController();

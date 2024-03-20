@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
     // Reset values just to be safe
     public static void ResetInstances() {
         CurrentScore = 0;
-        PlayerHealth = 100f;
+        // PlayerHealth = 100f;
         EnemyHealth = 100f;
     }
 }
