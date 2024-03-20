@@ -24,7 +24,7 @@ public class PHealth : MonoBehaviour
     private void GameOver()
     {
         // End the game and stop all movement
-        GetComponent<PlayerController>().enabled = false;
+        // GetComponent<PlayerController>().enabled = false;
 
         // Stop all AI zombie agents
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");

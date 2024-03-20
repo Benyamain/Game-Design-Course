@@ -7,6 +7,7 @@ public class Med : MonoBehaviour
     private AudioSource _medSFX;
     private MeshRenderer _medMeshRenderer;
     private BoxCollider _medBoxCollider;
+    private float healAmount = 20f;
     
     // Start is called before the first frame update
     private void Start()
@@ -27,7 +28,7 @@ public class Med : MonoBehaviour
             // Destroy the game object after the audio clip is doing playing, so we can hear its beauty
             Destroy(gameObject);
             // Display this on the UI thread
-            GameManager.AddHealthPickup();
+            GameManager.AddHealthPickup(healAmount);
         }
     }
 }

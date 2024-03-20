@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Windows.Markup;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -154,6 +155,12 @@ public class CharacterMover : MonoBehaviour
             // Shoot sound
             if (!_weaponSFX.isPlaying && !isRunning && !isRunningBackwards) {
                 _weaponSFX.Play();
+            }
+
+            RaycastHit hit;
+            if (Physics.Raycast(GameManager.MainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
+            {
+                GameManager.Player.GetComponent<NavMeshAgent>().SetDestination(hit.point);
             }
         }
         

@@ -15,14 +15,18 @@ public class GameManager : MonoBehaviour
     public static GameObject Player;
     public static GameObject Enemy;
     public static GameObject EnemyHealthSliderGameObject;
+    public static GameObject[] EnemySpawnPointsGameObject;
     public static CharacterController PlayerCharacterController;
     public static CharacterController EnemyCharacterController;
     public static bool IsPlayerDead;
     public static bool IsEnemyDead;
     public static bool WasMenuLoaded = false;
     public static float PlayerHealth = 100f;
-    public static float EnemyHealth = 100f;
+    public static float EnemyHealth = 5f;
     public static Slider EnemyHealthSlider;
+    public static List<Transform> EnemySpawnPoints = new List<Transform>();
+    public static float HealthPickupAmount = 100f;
+    public static float MaxHealth = 100f;
 
     private void Awake() {
         if (!WasMenuLoaded) {
@@ -39,6 +43,14 @@ public class GameManager : MonoBehaviour
         PlayerCharacterController = Player.GetComponent<CharacterController>();
         EnemyCharacterController = Enemy.GetComponent<CharacterController>();
         EnemyHealthSliderGameObject = GameObject.FindGameObjectWithTag("EnemyHealthSlider");
+        EnemySpawnPointsGameObject = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
+
+        GameObject[] spawnPoints = EnemySpawnPointsGameObject;
+        foreach (GameObject spawnPoint in spawnPoints)
+        {
+            EnemySpawnPoints.Add(spawnPoint.transform);
+        }
+        
 
         SetEnemyHealthSlider();
     }
@@ -53,7 +65,9 @@ public class GameManager : MonoBehaviour
         CurrentScore++;
         IsEnemyDead = true;
         Destroy(Enemy);
+        RespawnEnemy();
     }
+    
 
     public static void RestartGame() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -88,8 +102,9 @@ public class GameManager : MonoBehaviour
     }
 
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b
-    public static void AddHealthPickup() {
-        PlayerHealth = PlayerHealth >= 80f ? PlayerHealth = 100f : PlayerHealth += 20f;
+    public static void AddHealthPickup(float healAmount) {
+        // Clamping the value also works as well
+        PlayerHealth = Mathf.Min(PlayerHealth + healAmount, MaxHealth);
     }
 
     public static void PlayerTakeDamage(float damageAmount) {
@@ -121,10 +136,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void RespawnEnemy()
+    {
+        Transform spawnPoint = EnemySpawnPoints[Random.Range(0, EnemySpawnPoints.Count)];
+        Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
+    }
+
     // Reset values just to be safe
     public static void ResetInstances() {
         CurrentScore = 0;
-        // PlayerHealth = 100f;
+        PlayerHealth = 100f;
         EnemyHealth = 100f;
     }
 }
