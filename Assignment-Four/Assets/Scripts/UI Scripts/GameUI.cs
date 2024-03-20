@@ -53,8 +53,5 @@ public class GameUI : BaseGameUI
 
             PlayerPrefs.SetInt("NEW KEY", _highScore);
         }
-
-        GameManager.RestartGame();
-        GameManager.ResetInstances();
     }
 }
