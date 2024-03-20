@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterMover : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     // Animation documentation: https://docs.unity3d.com/Manual/class-AnimatorController.html
     // Animations with input system: https://discussions.unity.com/t/how-to-set-animators-controller-in-script/63474/3

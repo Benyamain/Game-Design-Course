@@ -115,9 +115,13 @@ public class GameManager : MonoBehaviour
         PlayerHealth -= damageAmount;
 
         if (PlayerHealth <= 0) {
-            DisablePlayerCharacterController();
-            DisableEnemyCharacterController();
+            GameOver();
         }
+    }
+
+    public static void GameOver() {
+        DisablePlayerCharacterController();
+        DisableEnemyCharacterController();
     }
 
     public static void EnemyTakeDamage(float damageAmount) {
@@ -140,12 +144,13 @@ public class GameManager : MonoBehaviour
     {
         Transform spawnPoint = EnemySpawnPoints[Random.Range(0, EnemySpawnPoints.Count)];
         Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
+        EnemyHealth = 5f;
     }
 
     // Reset values just to be safe
     public static void ResetInstances() {
         CurrentScore = 0;
         PlayerHealth = 100f;
-        EnemyHealth = 100f;
+        EnemyHealth = 5f;
     }
 }

@@ -5,11 +5,6 @@ public class PHealth : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    private void Start()
-    {
-        currentHealth = maxHealth;
-    }
-
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -40,10 +35,5 @@ public class PHealth : MonoBehaviour
                 // enemyController.RequestDecision();
             }
         }
-    }
-
-    public void HealPlayer(int healAmount)
-    {
-        currentHealth = Mathf.Min(currentHealth + healAmount, maxHealth);
     }
 }
