@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
             }
 
             RaycastHit hit;
-            if (Physics.Raycast(GameManager.MainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
+            if (!GameManager.IsPlayerDead && Physics.Raycast(GameManager.MainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
             {
                 GameManager.PlayerNavMeshAgent.SetDestination(hit.point);
             }

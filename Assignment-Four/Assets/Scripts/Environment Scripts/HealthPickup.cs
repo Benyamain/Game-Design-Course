@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     private AudioSource _medSFX;
-    private float healAmount = 20f;
+    private float healAmount = 100f;
     public float respawnTime = 10f;
     
     // Start is called before the first frame update

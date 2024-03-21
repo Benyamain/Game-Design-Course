@@ -81,7 +81,7 @@ public class PlayerShooting : MonoBehaviour
 
         if (nearestEnemy != null)
         {
-            GameManager.EnemyTakeDamage(damagePerShot);
+            nearestEnemy.GetComponent<EnemyHealth>().TakeDamage(1f);
         }
 
         Invoke(nameof(ResetShootingCooldown), shootingCooldown);

@@ -43,13 +43,18 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float attackFinishedWaitTime = 0.5f;
     private float _attackFinishedTimer;
+    private CharacterController _enemyCharacterController;
 
     [SerializeField]
     private EnemyDamageArea enemyDamageArea;
+    private bool enemyDied;
+    private Enemy enemyScript;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _enemyCharacterController = GetComponent<CharacterController>();
+        enemyScript = GetComponent<Enemy>();
     }
 
     private void OnMove(InputValue value)
@@ -64,6 +69,15 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.IsPlayerDead) {
+            GameManager.GameOver();
+            _enemyCharacterController.enabled = false;
+            enemyScript.enabled = false;
+            
+        }
+        
+        if (enemyDied) return;
+        
         if (GameManager.Player == null)
         {
             return;
@@ -114,7 +128,7 @@ public class Enemy : MonoBehaviour
             movement.y = _velocity * Time.deltaTime;
 
             // Move towards the player
-            GameManager.EnemyCharacterController.Move(movement);
+            _enemyCharacterController.Move(movement);
 
             if (distanceToPlayer <= meleeRange)
             {
@@ -176,5 +190,10 @@ public class Enemy : MonoBehaviour
             enemyDamageArea.gameObject.SetActive(true);
             enemyDamageArea.ResetDeactivateTimer();
         }
+    }
+
+    public void EnemyDied() {
+        enemyDied = true;
+        Destroy(gameObject);
     }
 }

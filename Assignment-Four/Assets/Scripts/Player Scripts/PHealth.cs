@@ -2,20 +2,6 @@ using UnityEngine;
 
 public class PHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
-    public int currentHealth;
-
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-        if (currentHealth == 0)
-        {
-            GameOver();
-        }
-    }
-
     private void GameOver()
     {
         // End the game and stop all movement

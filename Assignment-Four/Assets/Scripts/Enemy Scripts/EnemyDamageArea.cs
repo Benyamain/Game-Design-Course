@@ -9,8 +9,7 @@ public class EnemyDamageArea : MonoBehaviour
     private float deactivateTimer;
     [SerializeField]
     private bool canDealDamage;
-    [SerializeField]
-    private float damageAmount = 20f;
+    private float damageAmount = 10f;
 
     private void Awake() {
         gameObject.SetActive(false);
