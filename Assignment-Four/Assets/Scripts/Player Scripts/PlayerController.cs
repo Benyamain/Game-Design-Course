@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(GameManager.MainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
             {
-                GameManager.Player.GetComponent<NavMeshAgent>().SetDestination(hit.point);
+                GameManager.PlayerNavMeshAgent.SetDestination(hit.point);
             }
         }
         
@@ -210,10 +210,6 @@ public class PlayerController : MonoBehaviour
             // Load the scene again
             GameManager.RestartGame();
             GameManager.ResetInstances();
-
-            // New additions
-            GameManager.EnablePlayerCharacterController();
-            GameManager.EnableEnemyCharacterController();
         }
 
         if (Keyboard.current.mKey.wasPressedThisFrame) {

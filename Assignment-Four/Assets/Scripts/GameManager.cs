@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class GameManager : MonoBehaviour
     public static Camera MainCamera;
     public static GameObject Player;
     public static GameObject Enemy;
+    private static List<GameObject> Enemies = new List<GameObject>();
     public static GameObject EnemyHealthSliderGameObject;
     public static GameObject[] EnemySpawnPointsGameObject;
     public static CharacterController PlayerCharacterController;
@@ -27,6 +30,11 @@ public class GameManager : MonoBehaviour
     public static List<Transform> EnemySpawnPoints = new List<Transform>();
     public static float HealthPickupAmount = 100f;
     public static float MaxHealth = 100f;
+    private static PlayerController PlayerControllerScript;
+    private static Enemy EnemyScript;
+    public static NavMeshAgent PlayerNavMeshAgent;
+    private static int EnemySpawnLimit = 10;
+    private static float NextEnemySpawnTime;
 
     private void Awake() {
         if (!WasMenuLoaded) {
@@ -38,21 +46,38 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
         Player = GameObject.FindGameObjectWithTag("Player");
-        Enemy = GameObject.FindGameObjectWithTag("Enemy");
         PlayerCharacterController = Player.GetComponent<CharacterController>();
+        PlayerControllerScript = Player.GetComponent<PlayerController>();
+        PlayerNavMeshAgent = Player.GetComponent<NavMeshAgent>();
+
+        Enemy = GameObject.FindGameObjectWithTag("Enemy");
+        Enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         EnemyCharacterController = Enemy.GetComponent<CharacterController>();
         EnemyHealthSliderGameObject = GameObject.FindGameObjectWithTag("EnemyHealthSlider");
         EnemySpawnPointsGameObject = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
+        EnemyScript = Enemy.GetComponent<Enemy>();
+
 
         GameObject[] spawnPoints = EnemySpawnPointsGameObject;
         foreach (GameObject spawnPoint in spawnPoints)
         {
             EnemySpawnPoints.Add(spawnPoint.transform);
         }
-        
 
         SetEnemyHealthSlider();
+
+        NextEnemySpawnTime = Time.time + Random.Range(5f, 10f);
+    }
+
+    private void Update()
+    {
+        if (Time.time >= NextEnemySpawnTime && Enemies.Count < EnemySpawnLimit)
+        {
+            SpawnEnemy();
+            NextEnemySpawnTime = Time.time + Random.Range(5f, 10f);
+        }
     }
 
     public static void SetEnemyHealthSlider() {
@@ -64,8 +89,9 @@ public class GameManager : MonoBehaviour
     public static void EnemyDied() {
         CurrentScore++;
         IsEnemyDead = true;
+        Enemies.Remove(Enemy);
         Destroy(Enemy);
-        RespawnEnemy();
+        SpawnEnemy();
     }
     
 
@@ -120,6 +146,10 @@ public class GameManager : MonoBehaviour
     }
 
     public static void GameOver() {
+        EnemyScript.enabled = false;
+        // Need to disable this to prevent clipping to ground with NavMeshSurface when Player cannot move.
+        PlayerNavMeshAgent.enabled = false;
+        PlayerControllerScript.enabled = false;
         DisablePlayerCharacterController();
         DisableEnemyCharacterController();
     }
@@ -140,11 +170,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void RespawnEnemy()
+    public static void SpawnEnemy()
     {
+        if (Enemies.Count == EnemySpawnLimit) return;
+
         Transform spawnPoint = EnemySpawnPoints[Random.Range(0, EnemySpawnPoints.Count)];
-        Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
-        EnemyHealth = 5f;
+        GameObject newEnemy = Instantiate(Enemy, spawnPoint.position, spawnPoint.rotation);
+
+        if (newEnemy != null)
+        {
+            Enemies.Add(newEnemy);
+        }
     }
 
     // Reset values just to be safe

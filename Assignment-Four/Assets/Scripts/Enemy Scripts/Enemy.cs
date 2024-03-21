@@ -5,7 +5,6 @@ public class Enemy : MonoBehaviour
 {
     // Ground the enemy so he does not go flying
     
-    private CharacterController _controller;
     private Animator _animator;
 
     [SerializeField]
@@ -50,7 +49,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
     }
 
@@ -116,7 +114,7 @@ public class Enemy : MonoBehaviour
             movement.y = _velocity * Time.deltaTime;
 
             // Move towards the player
-            _controller.Move(movement);
+            GameManager.EnemyCharacterController.Move(movement);
 
             if (distanceToPlayer <= meleeRange)
             {
