@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     // https://forum.unity.com/threads/help-how-do-you-set-up-a-gamemanager.131170/
+    // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b
     public static int CurrentScore = 0;
     public static int HighScore = 0;
     public static int LoadMenu = 0;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     public static bool IsTeleportedToTop = false;
 
     private void Awake() {
+        // Be sure the menu is the first thing being loaded when the game starts
         if (!WasMenuLoaded) {
             SceneManager.LoadScene(GameManager.LoadMenu);
             WasMenuLoaded = true;
@@ -99,9 +101,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b
     public static void AddHealthPickup(float healAmount) {
-        // Clamping the value also works as well
+        // Clamping the value also works
         PlayerHealth = Mathf.Min(PlayerHealth + healAmount, MaxHealth);
     }
 

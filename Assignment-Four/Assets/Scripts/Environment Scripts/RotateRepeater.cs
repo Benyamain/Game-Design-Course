@@ -8,13 +8,6 @@ public class RotateRepeater : MonoBehaviour
     [Tooltip("Object rotation speed")]
     private float _speed = 100f;
     
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
-    }
-
-    // Called once every frame
     private void Update()
     {
         // Rotate on the y-axis but do it with respect to time

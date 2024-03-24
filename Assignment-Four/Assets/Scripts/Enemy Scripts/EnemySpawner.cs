@@ -27,10 +27,13 @@ public class EnemySpawner : MonoBehaviour
     }
 
     private void SpawnEnemy() {
+        // Timed spawner
         Invoke("SpawnEnemy", Random.Range(minSpawnTime, maxSpawnTime));
 
+        // Do not spawn more than the max amount set
         if (spawnedEnemies.Count == enemySpawnLimit) return;
         
+        // Keep respawning as long as the game is still active (the player is not dead yet)
         if (!GameManager.IsPlayerDead) {
             newEnemy = Instantiate(enemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
             spawnedEnemies.Add(newEnemy);
@@ -50,6 +53,7 @@ public class EnemySpawner : MonoBehaviour
 
         yield return new WaitForSeconds(10f);
 
+        // Enemy goes back to one of the spawn points
         if (enemy != null && !GameManager.IsPlayerDead)
         {
             enemy.transform.position = GetRandomSpawnPosition();

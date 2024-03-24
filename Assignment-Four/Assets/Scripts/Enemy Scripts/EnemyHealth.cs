@@ -18,6 +18,7 @@ public class EnemyHealth : MonoBehaviour
         if (health <= 0) return;
         health -= damageAmount;
 
+        // When enemy has died, change state vars, destroy the game object, and increment the score
         if (health <= 0f)
         {
             health = 0;
@@ -26,6 +27,7 @@ public class EnemyHealth : MonoBehaviour
             GameManager.CurrentScore++;
         }
 
+        // Health slider
         enemyHealthSlider.value = health;
     }
 }

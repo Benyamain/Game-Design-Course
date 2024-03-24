@@ -16,6 +16,7 @@ public class EnemyDamageArea : MonoBehaviour
     }
 
     private void Update() {
+        // Check when player is near and take damage to them
         if (Physics.CheckSphere(transform.position, 1f))
         {
             if (canDealDamage)
@@ -29,6 +30,7 @@ public class EnemyDamageArea : MonoBehaviour
     }
 
     void DeactivateDamageArea() {
+        // Cooldown for the enemy to hit not the player every frame
         if (Time.time > deactivateTimer) gameObject.SetActive(false);
     }
 

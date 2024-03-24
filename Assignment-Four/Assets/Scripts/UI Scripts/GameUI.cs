@@ -44,7 +44,7 @@ public class GameUI : BaseGameUI
         if ((GameManager.CurrentScore > PlayerPrefs.GetInt("NEW KEY", int.MinValue)))
         {
             GameManager.HighScore = GameManager.CurrentScore;
-            // Store in temporary as there is bug fix that resets and does not show the best time
+            // Store in temporary as there is bug fix that resets and does not show the best score
             _highScore = GameManager.HighScore;
 
             PlayerPrefs.SetInt("NEW KEY", _highScore);

@@ -43,11 +43,13 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        // Get the animator component
         _animator = playerTransform.gameObject.GetComponent<Animator>();
     }
 
     private void Update()
     {
+        // Reset movement animations every frame
         ResetMovementState();
 
         Vector3 movement = GetMovementDirection();
@@ -65,12 +67,14 @@ public class PlayerController : MonoBehaviour
         Ray ray = GameManager.MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
 
+        // Detect what direction that the player wants to go in based on where their current mouse position is.
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 targetDirection = hit.point - transform.position;
             targetDirection.y = 0f;
             movement = targetDirection.normalized * moveSpeed * Time.deltaTime;
 
+            // https://docs.unity3d.com/ScriptReference/Vector3.SignedAngle.html
             float angle = Vector3.SignedAngle(transform.forward, targetDirection, Vector3.up);
             if (angle > 0f)
             {
@@ -82,6 +86,8 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                /* Measure the difference between the current player position and where their current mouse position is.
+                Then, find the magnitude. */
                 if (targetDirection.magnitude > 0.1f)
                 {
                     isRunning = true;
@@ -111,10 +117,12 @@ public class PlayerController : MonoBehaviour
         Ray ray = GameManager.MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
 
+        // We now rotate where the mouse is placed in the game
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 targetDirection = hit.point - transform.position;
             targetDirection.y = 0f;
+            // Smooth rotation
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, lookSpeed * Time.deltaTime);
         }
@@ -132,17 +140,6 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Mouse.current.leftButton.isPressed)
-        {
-            _canJump = false;
-            _isShooting = true;
-        }
-        else if (Mouse.current.leftButton.wasReleasedThisFrame)
-        {
-            _canJump = true;
-            _isShooting = false;
-        }
-
         if (_canJump && Keyboard.current.spaceKey.isPressed)
         {
             StartCoroutine(JumpWithDelay());

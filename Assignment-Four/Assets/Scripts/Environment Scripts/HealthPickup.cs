@@ -9,11 +9,11 @@ public class HealthPickup : MonoBehaviour
     private float playerHealthCondition = 100f;
     
     private void OnTriggerEnter(Collider other) {
-        // https://discussions.unity.com/t/character-detection-from-tag-on-trigger-enter/53838/2
+        // Check when the player collides with the health pickup
         if (other.tag == "Player" && GameManager.PlayerHealth < playerHealthCondition) {
-            // Destroy(gameObject);
             GameManager.AddHealthPickup(healAmount);
             gameObject.SetActive(false);
+            // Respawn timer on the health pickup
             Invoke(nameof(RespawnPickup), respawnTime);
         }
     }

@@ -3,6 +3,8 @@ using UnityEngine;
 public class Teleport : MonoBehaviour
 {    
     
+    /* Spawn points for where we want the player to be teleporting to.
+    Note: This script is not being used, but still left it in here. */
     private Vector3 _checkpointPositionTop = new(-0.7f, 37.3f, 1.3f);
     private Vector3 _checkpointRotationTop = new(0f, 0f, 0f);
     private Vector3 _checkpointPositionBottom = new(-61.32f, 2.61f, -13.7f);

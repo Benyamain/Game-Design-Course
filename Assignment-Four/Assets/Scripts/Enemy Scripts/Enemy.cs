@@ -55,6 +55,8 @@ public class Enemy : MonoBehaviour
         // Check if the player is within arms reach for melee
         float distanceToPlayer = Vector3.Distance(enemyNavMeshAgent.transform.position, GameManager.Player.transform.position);
 
+        /* Converting world space to local space */
+        
         if (transform.InverseTransformDirection(enemyNavMeshAgent.velocity).z > 0f)
         {
             _isRunning = true;
@@ -85,6 +87,7 @@ public class Enemy : MonoBehaviour
             CheckIfAttackFinished();
             Attack();
         }
+
         // Update animator based on movement and attack states
         UpdateAnimator();
     }
@@ -123,6 +126,7 @@ public class Enemy : MonoBehaviour
     {
         if (enemyNavMeshAgent != null)
         {
+            // Stop agent from moving
             enemyNavMeshAgent.isStopped = true;
         }
 
