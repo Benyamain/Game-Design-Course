@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -7,14 +8,12 @@ public class Enemy : MonoBehaviour
     
     private Animator _animator;
 
-    [SerializeField]
-    private float moveSpeed = 5f;
+    private float moveSpeed = 2f;
 
     [SerializeField]
     private float rotationSpeed = 2f;
 
-    [SerializeField]
-    private float chaseRange = 25f;
+    private float chaseRange = 250f;
 
     // Maybe change this when they collide with each other?
     [SerializeField]
@@ -34,9 +33,6 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _velocity;
 
-    private Vector2 _move;
-    private float _look;
-
     [SerializeField]
     private float attackWaitTime = 2.5f;
     private float _attackTimer;
@@ -48,32 +44,24 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private EnemyDamageArea enemyDamageArea;
     private bool enemyDied;
-    private Enemy enemyScript;
+    private NavMeshAgent enemyNavMeshAgent;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _enemyCharacterController = GetComponent<CharacterController>();
-        enemyScript = GetComponent<Enemy>();
-    }
-
-    private void OnMove(InputValue value)
-    {
-        _move = value.Get<Vector2>();
-    }
-
-    private void OnLook(InputValue value)
-    {
-        _look = value.Get<float>();
+        enemyNavMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
+        // enemyNavMeshAgent.destination = GameManager.Player.position;
+        
         if (GameManager.IsPlayerDead) {
             GameManager.GameOver();
             _enemyCharacterController.enabled = false;
-            enemyScript.enabled = false;
-            
+            // Disable the script
+            this.enabled = false;
         }
         
         if (enemyDied) return;
@@ -81,28 +69,6 @@ public class Enemy : MonoBehaviour
         if (GameManager.Player == null)
         {
             return;
-        }
-
-        ResetMovementState();
-
-        if (_move.y > 0f)
-        {
-            _isRunning = true;
-        }
-
-        if (_move.y < 0f)
-        {
-            _isRunningBackwards = true;
-        }
-
-        if (_move.x > 0f)
-        {
-            _isRightStrafing = true;
-        }
-
-        if (_move.x < 0f)
-        {
-            _isLeftStrafing = true;
         }
 
         // Check if the player is within arms reach for melee
@@ -130,6 +96,26 @@ public class Enemy : MonoBehaviour
             // Move towards the player
             _enemyCharacterController.Move(movement);
 
+            if (_moveDirection.z > 0f) {
+                _isRunning = true;
+                _isRunningBackwards = _isRightStrafing = _isLeftStrafing = false;
+            }
+
+            if (_moveDirection.z < 0f) {
+                _isRunningBackwards = true;
+                _isRunning = _isRightStrafing = _isLeftStrafing = false;
+            }
+
+            if (_moveDirection.x < 0f) {
+                _isLeftStrafing = true;
+                _isRunningBackwards = _isRightStrafing = _isRunning = false;
+            }
+
+            if (_moveDirection.x > 0f) {
+                _isRightStrafing = true;
+                _isRunningBackwards = _isRunning = _isLeftStrafing = false;
+            }
+
             if (distanceToPlayer <= meleeRange)
             {
                 _isMelee = true;
@@ -137,12 +123,40 @@ public class Enemy : MonoBehaviour
                 Attack();
             }
 
-            // Update animator based on movement and attack states
-            UpdateAnimator();
-        }
-    }
+            // if (enemyNavMeshAgent.destination.z > 0f)
+            // {
+            //     _isRunning = true;
+            //     _isRunningBackwards = _isRightStrafing = _isLeftStrafing = false;
+            // }
 
-    // TODO: Fix Player taking way too much damage from Enemy hit.
+            // if (enemyNavMeshAgent.destination.z < 0f)
+            // {
+            //     _isRunningBackwards = true;
+            //     _isRunning = _isRightStrafing = _isLeftStrafing = false;
+            // }
+
+            // if (enemyNavMeshAgent.destination.x < 0f)
+            // {
+            //     _isLeftStrafing = true;
+            //     _isRunningBackwards = _isRightStrafing = _isRunning = false;
+            // }
+
+            // if (enemyNavMeshAgent.destination.x > 0f)
+            // {
+            //     _isRightStrafing = true;
+            //     _isRunningBackwards = _isRunning = _isLeftStrafing = false;
+            // }
+
+            // if (enemyNavMeshAgent.destination.z <= meleeRange)
+            // {
+            //     _isMelee = true;
+            //     CheckIfAttackFinished();
+            //     Attack();
+            // }
+        }
+        // Update animator based on movement and attack states
+        UpdateAnimator();
+    }
 
     private void OrientateToPlayer()
     {
@@ -162,16 +176,6 @@ public class Enemy : MonoBehaviour
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
         _animator.SetBool("_isMelee", _isMelee);
         // _animator.SetBool("_isKicking", _isKicking);
-    }
-
-    private void ResetMovementState()
-    {
-        _isRunning = false;
-        _isRunningBackwards = false;
-        _isLeftStrafing = false;
-        _isRightStrafing = false;
-        _isMelee = false;
-        // _isKicking = false;
     }
 
     private void CheckIfAttackFinished() {

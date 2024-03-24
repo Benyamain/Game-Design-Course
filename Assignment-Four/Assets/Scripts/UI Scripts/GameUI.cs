@@ -30,10 +30,6 @@ public class GameUI : BaseGameUI
 
         JumpLabel.text = "Jump (Spacebar)";
 
-        SprintLabel.text = "Sprint (LShift)";
-
-        CrouchLabel.text = "Crouch (C)";
-
         MenuLabel.text = "Menu (M)";
 
         RestartButton.text = "Restart (R)";
@@ -42,7 +38,7 @@ public class GameUI : BaseGameUI
     // Update is called once per frame
     private void Update()
     {
-        CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString("F0");
+        CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString();
         HealthLabel.text = "Health: " + GameManager.PlayerHealth.ToString();
 
         if ((GameManager.CurrentScore > PlayerPrefs.GetInt("NEW KEY", int.MinValue)))

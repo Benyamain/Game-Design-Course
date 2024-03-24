@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using Grpc.Core;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,17 +15,14 @@ public class GameManager : MonoBehaviour
     public static int LoadGame = 1;
     public static Camera MainCamera;
     public static GameObject Player;
-    public static GameObject Enemy;
-    public static GameObject EnemyHealthSliderGameObject;
     public static CharacterController PlayerCharacterController;
-    public static CharacterController EnemyCharacterController;
     public static bool IsPlayerDead;
     public static bool WasMenuLoaded = false;
     public static float PlayerHealth = 100f;
     public static float HealthPickupAmount = 100f;
     public static float MaxHealth = 100f;
     private static PlayerController PlayerControllerScript;
-    public static NavMeshAgent PlayerNavMeshAgent;
+    private static Animator PlayerAnimator;
 
     private void Awake() {
         if (!WasMenuLoaded) {
@@ -42,7 +38,7 @@ public class GameManager : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         PlayerCharacterController = Player.GetComponent<CharacterController>();
         PlayerControllerScript = Player.GetComponent<PlayerController>();
-        PlayerNavMeshAgent = Player.GetComponent<NavMeshAgent>();
+        PlayerAnimator = Player.GetComponent<Animator>();
     }
 
     public static void RestartGame() {
@@ -53,6 +49,34 @@ public class GameManager : MonoBehaviour
         if (PlayerCharacterController != null)
         {
             PlayerCharacterController.enabled = false;
+        }
+    }
+
+    public static void EnablePlayerAnimator() {
+        if (PlayerAnimator != null)
+        {
+            PlayerAnimator.enabled = true;
+        }
+    }
+
+    public static void DisablePlayerAnimator() {
+        if (PlayerAnimator != null)
+        {
+            PlayerAnimator.enabled = false;
+        }
+    }
+
+    public static void EnablePlayerControllerScript() {
+        if (PlayerAnimator != null)
+        {
+            PlayerControllerScript.enabled = true;
+        }
+    }
+
+    public static void DisablePlayerControllerScript() {
+        if (PlayerControllerScript != null)
+        {
+            PlayerControllerScript.enabled = false;
         }
     }
 
@@ -82,10 +106,9 @@ public class GameManager : MonoBehaviour
     }
 
     public static void GameOver() {
-        // Need to disable this to prevent clipping to ground with NavMeshSurface when Player cannot move.
-        PlayerNavMeshAgent.enabled = false;
-        PlayerControllerScript.enabled = false;
+        DisablePlayerControllerScript();
         DisablePlayerCharacterController();
+        DisablePlayerAnimator();
     }
 
     // Reset values just to be safe

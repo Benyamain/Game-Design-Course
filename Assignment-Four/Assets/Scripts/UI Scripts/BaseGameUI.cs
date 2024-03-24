@@ -18,16 +18,6 @@ public abstract class BaseGameUI : MonoBehaviour
     /// </summary>
     protected Label JumpLabel;
     
-    /// <summary>
-    /// The label to display how to sprint.
-    /// </summary>
-    protected Label SprintLabel;
-
-    /// <summary>
-    /// The label to display how to crouch.
-    /// </summary>
-    protected Label CrouchLabel;
-
     protected Label MenuLabel;
 
     protected Button RestartButton;
@@ -48,10 +38,6 @@ public abstract class BaseGameUI : MonoBehaviour
         HealthLabel = root.Q<Label>("HealthLabel");
 
         JumpLabel = root.Q<Label>("JumpLabel");
-
-        SprintLabel = root.Q<Label>("SprintLabel");
-
-        CrouchLabel = root.Q<Label>("CrouchLabel");
 
         MenuLabel = root.Q<Label>("MenuLabel");
         

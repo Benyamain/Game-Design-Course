@@ -16,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
     private List<GameObject> spawnedEnemies = new List<GameObject>();
     [SerializeField]
     private float minSpawnTime = 2f, maxSpawnTime = 5f;
+    private bool isReturningToSpawn = false;
 
     private void Awake() {
         if (instance == null) instance = this;
@@ -31,9 +32,36 @@ public class EnemySpawner : MonoBehaviour
         if (spawnedEnemies.Count == enemySpawnLimit) return;
         
         if (!GameManager.IsPlayerDead) {
-            newEnemy = Instantiate(enemyPrefab, spawnPosition[Random.Range(0, spawnPosition.Length)].position, Quaternion.identity);
+            newEnemy = Instantiate(enemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
             spawnedEnemies.Add(newEnemy);
+            
+            // Check if the enemy is already returning to spawn before starting a new coroutine
+            // TODO: Ask about spawn not working properly
+            if (!isReturningToSpawn)
+            {
+                StartCoroutine(ReturnToSpawn(newEnemy));
+            }
         }
+    }
+
+    private IEnumerator ReturnToSpawn(GameObject enemy)
+    {
+        isReturningToSpawn = true;
+
+        yield return new WaitForSeconds(10f);
+
+        if (enemy != null && !GameManager.IsPlayerDead)
+        {
+            enemy.transform.position = GetRandomSpawnPosition();
+        }
+
+        // Reset the flag to indicate coroutine has finished
+        isReturningToSpawn = false;
+    }
+
+    private Vector3 GetRandomSpawnPosition()
+    {
+        return spawnPosition[Random.Range(0, spawnPosition.Length)].position;
     }
 
     public void EnemyDied(GameObject enemy) {

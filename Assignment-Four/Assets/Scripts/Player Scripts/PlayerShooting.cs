@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -14,52 +13,42 @@ public class PlayerShooting : MonoBehaviour
 
     [SerializeField]
     private float lineWidth = 0.045f;
-    private PlayerController playerController;
 
     private LineRenderer _lr;
     private float _alpha = 1f;
 
-    [SerializeField]
-    public float shootingRange = 15f;
+    public float shootingRange = 100f;
 
     [SerializeField]
     public int damagePerShot = 1;
 
-    [SerializeField]
     public float shootingCooldown = 1f;
 
-    private bool canShoot = true;
     private float lastShotTime = 0f;
+    private GameObject nearestEnemy;
+    private float minDistance;
 
     private void Start()
     {
         _lr = GetComponent<LineRenderer>();
-        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        if (!Mouse.current.leftButton.isPressed)
-        {
-            ClearLineRenderer();
-            return;
-        }
+        FindNearestEnemy();
 
-        if (Time.time - lastShotTime > shootingCooldown && playerController.canShoot && !playerController.isRunning && !playerController.isRunningBackwards)
+        if (minDistance < shootingRange && Time.time - lastShotTime > shootingCooldown)
         {
-            Ray ray = GameManager.MainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            ShootAtNearestEnemy(ray);
+            ShootAtNearestEnemy();
             lastShotTime = Time.time;
         }
     }
 
-    private void ShootAtNearestEnemy(Ray ray)
+    private void FindNearestEnemy()
     {
-        playerController.canShoot = false;
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, 1f, transform.forward, shootingRange);
-        GameObject nearestEnemy = null;
-        float minDistance = Mathf.Infinity;
-        Vector3 endPoint = rayStart.position + ray.direction * 1000;
+        nearestEnemy = null;
+        minDistance = Mathf.Infinity;
 
         foreach (RaycastHit hit in hits)
         {
@@ -70,10 +59,14 @@ public class PlayerShooting : MonoBehaviour
                 {
                     minDistance = distance;
                     nearestEnemy = hit.collider.gameObject;
-                    endPoint = hit.point;
                 }
             }
         }
+    }
+
+    private void ShootAtNearestEnemy()
+    {
+        Vector3 endPoint = nearestEnemy ? nearestEnemy.transform.position : rayStart.position + transform.forward * shootingRange;
 
         SetLineRendererPositions(rayStart.position, endPoint);
         SetLineRendererWidth();
@@ -81,21 +74,8 @@ public class PlayerShooting : MonoBehaviour
 
         if (nearestEnemy != null)
         {
-            nearestEnemy.GetComponent<EnemyHealth>().TakeDamage(1f);
+            nearestEnemy.GetComponent<EnemyHealth>().TakeDamage(damagePerShot);
         }
-
-        Invoke(nameof(ResetShootingCooldown), shootingCooldown);
-    }
-
-    private void ResetShootingCooldown()
-    {
-        playerController.canShoot = true;
-    }
-
-    private void ClearLineRenderer()
-    {
-        _lr.positionCount = 0;
-        _alpha = 1f;
     }
 
     private void SetLineRendererPositions(Vector3 start, Vector3 end)
@@ -119,10 +99,6 @@ public class PlayerShooting : MonoBehaviour
             lineColor.a = _alpha;
             _lr.startColor = lineColor;
             _lr.endColor = lineColor;
-        }
-        else
-        {
-            ClearLineRenderer();
         }
     }
 }

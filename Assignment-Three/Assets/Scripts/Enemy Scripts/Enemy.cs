@@ -35,9 +35,6 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _velocity;
 
-    private Vector2 _move;
-    private float _look;
-
     [SerializeField]
     private float attackWaitTime = 2.5f;
     private float _attackTimer;
@@ -54,43 +51,11 @@ public class Enemy : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void OnMove(InputValue value)
-    {
-        _move = value.Get<Vector2>();
-    }
-
-    private void OnLook(InputValue value)
-    {
-        _look = value.Get<float>();
-    }
-
     private void Update()
     {
         if (GameManager.Player == null)
         {
             return;
-        }
-
-        ResetMovementState();
-
-        if (_move.y > 0f)
-        {
-            _isRunning = true;
-        }
-
-        if (_move.y < 0f)
-        {
-            _isRunningBackwards = true;
-        }
-
-        if (_move.x > 0f)
-        {
-            _isRightStrafing = true;
-        }
-
-        if (_move.x < 0f)
-        {
-            _isLeftStrafing = true;
         }
 
         // Check if the player is within arms reach for melee
@@ -118,6 +83,30 @@ public class Enemy : MonoBehaviour
             // Move towards the player
             _controller.Move(movement);
 
+            if (_moveDirection.z > 0f)
+            {
+                _isRunning = true;
+                _isRunningBackwards = _isRightStrafing = _isLeftStrafing = false;
+            }
+
+            if (_moveDirection.z < 0f)
+            {
+                _isRunningBackwards = true;
+                _isRunning = _isRightStrafing = _isLeftStrafing = false;
+            }
+
+            if (_moveDirection.x < 0f)
+            {
+                _isLeftStrafing = true;
+                _isRunningBackwards = _isRightStrafing = _isRunning = false;
+            }
+
+            if (_moveDirection.x > 0f)
+            {
+                _isRightStrafing = true;
+                _isRunningBackwards = _isRunning = _isLeftStrafing = false;
+            }
+
             if (distanceToPlayer <= meleeRange)
             {
                 _isMelee = true;
@@ -129,8 +118,6 @@ public class Enemy : MonoBehaviour
             UpdateAnimator();
         }
     }
-
-    // TODO: Fix Player taking way too much damage from Enemy hit.
 
     private void OrientateToPlayer()
     {
@@ -150,16 +137,6 @@ public class Enemy : MonoBehaviour
         _animator.SetBool("_isRightStrafing", _isRightStrafing);
         _animator.SetBool("_isMelee", _isMelee);
         // _animator.SetBool("_isKicking", _isKicking);
-    }
-
-    private void ResetMovementState()
-    {
-        _isRunning = false;
-        _isRunningBackwards = false;
-        _isLeftStrafing = false;
-        _isRightStrafing = false;
-        _isMelee = false;
-        // _isKicking = false;
     }
 
     private void CheckIfAttackFinished() {
