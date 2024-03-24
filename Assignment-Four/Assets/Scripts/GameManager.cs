@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static Camera MainCamera;
     public static GameObject Player;
     public static CharacterController PlayerCharacterController;
+    public static PlayerShooting PlayerShootingScript;
     public static bool IsPlayerDead;
     public static bool WasMenuLoaded = false;
     public static float PlayerHealth = 100f;
@@ -23,6 +19,7 @@ public class GameManager : MonoBehaviour
     public static float MaxHealth = 100f;
     private static PlayerController PlayerControllerScript;
     private static Animator PlayerAnimator;
+    public static bool IsTeleportedToTop = false;
 
     private void Awake() {
         if (!WasMenuLoaded) {
@@ -39,6 +36,7 @@ public class GameManager : MonoBehaviour
         PlayerCharacterController = Player.GetComponent<CharacterController>();
         PlayerControllerScript = Player.GetComponent<PlayerController>();
         PlayerAnimator = Player.GetComponent<Animator>();
+        PlayerShootingScript = Player.GetComponent<PlayerShooting>();
     }
 
     public static void RestartGame() {
@@ -87,6 +85,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void DisablePlayerShootingScript() {
+        if (PlayerShootingScript != null)
+        {
+            PlayerShootingScript.enabled = false;
+        }
+    }
+
+    public static void EnablePlayerShootingScript() {
+        if (PlayerShootingScript != null)
+        {
+            PlayerShootingScript.enabled = true;
+        }
+    }
+
     // https://gist.github.com/kurtdekker/50faa0d78cd978375b2fe465d55b282b
     public static void AddHealthPickup(float healAmount) {
         // Clamping the value also works as well
@@ -108,6 +120,7 @@ public class GameManager : MonoBehaviour
     public static void GameOver() {
         DisablePlayerControllerScript();
         DisablePlayerCharacterController();
+        DisablePlayerShootingScript();
         DisablePlayerAnimator();
     }
 
@@ -116,5 +129,6 @@ public class GameManager : MonoBehaviour
         CurrentScore = 0;
         PlayerHealth = 100f;
         IsPlayerDead = false;
+        IsTeleportedToTop = false;
     }
 }

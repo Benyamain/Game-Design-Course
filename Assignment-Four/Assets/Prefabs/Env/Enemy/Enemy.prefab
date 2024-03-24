@@ -830,9 +830,6 @@ PrefabInstance:
       addedObject: {fileID: 810207249235647929}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9028592760391665026}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8526798758480883222}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
       insertIndex: -1
@@ -840,6 +837,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5413127141134730686}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6486296037305216473}
   m_SourcePrefab: {fileID: 100100000, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}
 --- !u!1 &220691629842375917 stripped
 GameObject:
@@ -867,32 +867,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &9028592760391665026
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 220691629842375917}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.7
-  m_Radius: 0.4
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!114 &8526798758480883222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -905,7 +879,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14319f7ad4a56ae4da85b78239f324dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
   rotationSpeed: 2
   meleeRange: 3
   gravity: -2
@@ -933,7 +906,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220691629842375917}
-  m_Enabled: 0
+  m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -948,6 +921,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &6486296037305216473
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220691629842375917}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.4
+  m_Height: 1.7
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!4 &602318459616394839 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a1e2fdf41f3bff5449941a1beb4f8b51, type: 3}

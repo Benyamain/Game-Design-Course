@@ -46,19 +46,25 @@ public class PlayerShooting : MonoBehaviour
 
     private void FindNearestEnemy()
     {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 1f, transform.forward, shootingRange);
-        nearestEnemy = null;
-        minDistance = Mathf.Infinity;
+        Vector3[] castDirections = { transform.forward, -transform.forward, transform.right, -transform.right };
 
-        foreach (RaycastHit hit in hits)
+        foreach (Vector3 direction in castDirections)
         {
-            if (hit.collider.CompareTag("Enemy"))
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 1f, direction, shootingRange);
+            nearestEnemy = null;
+            minDistance = Mathf.Infinity;
+
+            // Handle hits if needed
+            foreach (RaycastHit hit in hits)
             {
-                float distance = Vector3.Distance(transform.position, hit.transform.position);
-                if (distance < minDistance)
+                if (hit.collider.CompareTag("Enemy"))
                 {
-                    minDistance = distance;
-                    nearestEnemy = hit.collider.gameObject;
+                    float distance = Vector3.Distance(transform.position, hit.transform.position);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        nearestEnemy = hit.collider.gameObject;
+                    }
                 }
             }
         }
