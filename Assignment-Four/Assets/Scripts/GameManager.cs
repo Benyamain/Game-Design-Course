@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     public static float MaxHealth = 100f;
     private static PlayerController PlayerControllerScript;
     private static Animator PlayerAnimator;
+    private static NavMeshAgent PlayerNavMeshAgent;
     public static bool IsTeleportedToTop = false;
 
     private void Awake() {
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
         PlayerCharacterController = Player.GetComponent<CharacterController>();
         PlayerControllerScript = Player.GetComponent<PlayerController>();
         PlayerAnimator = Player.GetComponent<Animator>();
+        PlayerNavMeshAgent = Player.GetComponent<NavMeshAgent>();
         PlayerShootingScript = Player.GetComponent<PlayerShooting>();
     }
 
@@ -63,6 +66,20 @@ public class GameManager : MonoBehaviour
         if (PlayerAnimator != null)
         {
             PlayerAnimator.enabled = false;
+        }
+    }
+
+    public static void DisablePlayerNavMeshAgent() {
+        if (PlayerNavMeshAgent != null)
+        {
+            PlayerNavMeshAgent.isStopped = true;
+        }
+    }
+
+    public static void EnablePlayerNavMeshAgent() {
+        if (PlayerNavMeshAgent != null)
+        {
+            PlayerNavMeshAgent.isStopped = false;
         }
     }
 
