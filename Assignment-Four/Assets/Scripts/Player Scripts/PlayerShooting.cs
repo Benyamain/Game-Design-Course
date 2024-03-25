@@ -49,11 +49,11 @@ public class PlayerShooting : MonoBehaviour
     private void FindNearestEnemy()
     {
         // Shoot the enemy even when the player is not directly facing them
-        Vector3[] castDirections = { transform.forward, -transform.forward, transform.right, -transform.right };
+        Vector3[] castDirections = { GameManager.PlayerNavMeshAgent.transform.forward, -GameManager.PlayerNavMeshAgent.transform.forward, GameManager.PlayerNavMeshAgent.transform.right, -GameManager.PlayerNavMeshAgent.transform.right };
 
         foreach (Vector3 direction in castDirections)
         {
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 1f, direction, shootingRange);
+            RaycastHit[] hits = Physics.SphereCastAll(GameManager.PlayerNavMeshAgent.transform.position, 1f, direction, shootingRange);
             nearestEnemy = null;
             minDistance = Mathf.Infinity;
 
@@ -63,7 +63,7 @@ public class PlayerShooting : MonoBehaviour
                 /* Find a hit with an enemy, but only register the collider that gets the closest enemy hit. */
                 if (hit.collider.CompareTag("Enemy"))
                 {
-                    float distance = Vector3.Distance(transform.position, hit.transform.position);
+                    float distance = Vector3.Distance(GameManager.PlayerNavMeshAgent.transform.position, hit.transform.position);
                     if (distance < minDistance)
                     {
                         minDistance = distance;

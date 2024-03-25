@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public static float MaxHealth = 100f;
     private static PlayerController PlayerControllerScript;
     private static Animator PlayerAnimator;
-    private static NavMeshAgent PlayerNavMeshAgent;
+    public static NavMeshAgent PlayerNavMeshAgent;
     public static bool IsTeleportedToTop = false;
 
     private void Awake() {
