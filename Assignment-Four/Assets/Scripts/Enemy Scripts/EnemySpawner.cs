@@ -38,8 +38,7 @@ public class EnemySpawner : MonoBehaviour
             newEnemy = Instantiate(enemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
             spawnedEnemies.Add(newEnemy);
             
-            // Check if the enemy is already returning to spawn before starting a new coroutine
-            // TODO: Ask about spawn not working properly
+            // TODO: Ask about spawn not working properly.
             if (!isReturningToSpawn)
             {
                 StartCoroutine(ReturnToSpawn(newEnemy));

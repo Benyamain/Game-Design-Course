@@ -15,13 +15,13 @@ public class GameUI : BaseGameUI
         // Call the base start method so the label and button are set up first.
         base.Start();
 
-        if (PlayerPrefs.GetInt("NEW KEY") == 0f)
+        if (PlayerPrefs.GetInt("ZOMBIES SCORE") == 0f)
         {
             HighScoreLabel.text = $"High Score: None";
         }
         else
         {
-            HighScoreLabel.text = "High Score: " + PlayerPrefs.GetInt("NEW KEY").ToString();
+            HighScoreLabel.text = "High Score: " + PlayerPrefs.GetInt("ZOMBIES SCORE").ToString();
         }
 
         CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString();
@@ -41,13 +41,13 @@ public class GameUI : BaseGameUI
         CurrentScoreLabel.text = "Demons Killed: " + GameManager.CurrentScore.ToString();
         HealthLabel.text = "Health: " + GameManager.PlayerHealth.ToString();
 
-        if ((GameManager.CurrentScore > PlayerPrefs.GetInt("NEW KEY", int.MinValue)))
+        if ((GameManager.CurrentScore > PlayerPrefs.GetInt("ZOMBIES SCORE", int.MinValue)))
         {
             GameManager.HighScore = GameManager.CurrentScore;
             // Store in temporary as there is bug fix that resets and does not show the best score
             _highScore = GameManager.HighScore;
 
-            PlayerPrefs.SetInt("NEW KEY", _highScore);
+            PlayerPrefs.SetInt("ZOMBIES SCORE", _highScore);
         }
     }
 }

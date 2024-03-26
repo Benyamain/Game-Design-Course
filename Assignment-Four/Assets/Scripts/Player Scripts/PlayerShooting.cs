@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerShooting : MonoBehaviour
@@ -22,11 +23,10 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField]
     public int damagePerShot = 1;
 
-    public float shootingCooldown = 1f;
-
-    private float lastShotTime = 0f;
     private GameObject nearestEnemy;
     private float minDistance;
+    private float lastShotTime = 0f;
+    private float shootingCooldown = 2f;
 
     private void Start()
     {
@@ -37,30 +37,40 @@ public class PlayerShooting : MonoBehaviour
     {
         FindNearestEnemy();
 
-        /* Shoot when the distance to be between the player and enemy is less than the shooting range, along with
-        a shooting cooldown as well. */
-        if (minDistance < shootingRange && Time.time - lastShotTime > shootingCooldown)
+         // Check if enough time has passed since the last shot
+        if (Time.time - lastShotTime >= shootingCooldown)
         {
-            ShootAtNearestEnemy();
-            lastShotTime = Time.time;
+            /* Shoot when the distance to be between the player and enemy is less than the shooting range */
+            if (minDistance < shootingRange)
+            {
+                ShootAtNearestEnemy();
+                lastShotTime = Time.time;
+            }
         }
     }
 
     private void FindNearestEnemy()
     {
-        // Shoot the enemy even when the player is not directly facing them
-        Vector3[] castDirections = { GameManager.PlayerNavMeshAgent.transform.forward, -GameManager.PlayerNavMeshAgent.transform.forward, GameManager.PlayerNavMeshAgent.transform.right, -GameManager.PlayerNavMeshAgent.transform.right };
+        // Get all enemies in the scene
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
-        foreach (Vector3 direction in castDirections)
+        // Sort the enemies by distance to the player
+        List<GameObject> sortedEnemies = new List<GameObject>(enemies);
+        sortedEnemies.Sort((a, b) => Vector3.Distance(GameManager.PlayerNavMeshAgent.transform.position, a.transform.position)
+            .CompareTo(Vector3.Distance(GameManager.PlayerNavMeshAgent.transform.position, b.transform.position)));
+
+        nearestEnemy = null;
+        minDistance = Mathf.Infinity;
+
+        // Line check from player to each enemy
+        foreach (GameObject enemy in sortedEnemies)
         {
-            RaycastHit[] hits = Physics.SphereCastAll(GameManager.PlayerNavMeshAgent.transform.position, 1f, direction, shootingRange);
-            nearestEnemy = null;
-            minDistance = Mathf.Infinity;
+            Vector3 direction = enemy.transform.position - GameManager.PlayerNavMeshAgent.transform.position;
+            RaycastHit hit;
 
-            // Handle hits if needed
-            foreach (RaycastHit hit in hits)
+            // Perform line check
+            if (Physics.Raycast(GameManager.PlayerNavMeshAgent.transform.position, direction, out hit, shootingRange))
             {
-                /* Find a hit with an enemy, but only register the collider that gets the closest enemy hit. */
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     float distance = Vector3.Distance(GameManager.PlayerNavMeshAgent.transform.position, hit.transform.position);
